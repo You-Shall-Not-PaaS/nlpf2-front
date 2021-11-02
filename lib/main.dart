@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nlpf2/home.dart';
-import 'package:nlpf2/listing.dart';
 import 'package:nlpf2/navbar.dart';
+import 'package:nlpf2/properties/properties.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const Navbar(child: Home()),
-          '/listing': (context) => const Navbar(child: Listing()),
+          '/listing': (context) => const Navbar(child: Properties()),
         },
         theme: ThemeData(
           primaryColor: Colors.blue,
