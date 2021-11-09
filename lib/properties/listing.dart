@@ -13,21 +13,30 @@ class Listing extends StatefulWidget {
 class _ListingState extends State<Listing> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        padding: const EdgeInsets.all(8.0),
-        itemExtent: 106.0,
-        children: [
-          for (var property in widget.properties)
-            CustomListItem(property: property),
-          ElevatedButton(
+    return Column(children: [
+      Expanded(
+          child: ListView(
+              padding: const EdgeInsets.all(8.0),
+              itemExtent: 106.0,
+              children: [
+            for (var property in widget.properties)
+              Container(
+                  decoration: const BoxDecoration(
+                      border: Border.symmetric(
+                          horizontal: BorderSide(color: Colors.blueGrey))),
+                  child: CustomListItem(property: property))
+          ])),
+      IntrinsicHeight(
+          child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const PropertyMap()));
               },
-              child: const Text('Afficher la carte'))
-        ]);
+              child: const Text('Afficher la carte'))),
+      const SizedBox(height: 20) //padding
+    ]);
   }
 }
 

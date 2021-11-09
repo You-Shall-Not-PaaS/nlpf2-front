@@ -36,6 +36,36 @@ List<Property> mock = [
       valeur_fonciere: 45000,
       surface_reelle_bati: 132),
   Property(
+      commune: "LYON",
+      type_local: "Appartement",
+      valeur_fonciere: 150000,
+      surface_reelle_bati: 50),
+  Property(
+      commune: "PERPIZOO",
+      type_local: "Maison",
+      valeur_fonciere: 290000000,
+      surface_reelle_bati: 1500),
+  Property(
+      commune: "TOULOUSE",
+      type_local: "Dépendance",
+      valeur_fonciere: 45000,
+      surface_reelle_bati: 132),
+  Property(
+      commune: "LYON",
+      type_local: "Appartement",
+      valeur_fonciere: 150000,
+      surface_reelle_bati: 50),
+  Property(
+      commune: "PERPIZOO",
+      type_local: "Maison",
+      valeur_fonciere: 290000000,
+      surface_reelle_bati: 1500),
+  Property(
+      commune: "TOULOUSE",
+      type_local: "Dépendance",
+      valeur_fonciere: 45000,
+      surface_reelle_bati: 132),
+  Property(
       commune: "TOURCOING",
       type_local: "Autres",
       valeur_fonciere: 10000,
@@ -84,7 +114,7 @@ class _PropertiesState extends State<Properties> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Expanded(
+      IntrinsicHeight(
           child: Navigator(
               key: keyOne,
               onGenerateRoute: (routeSettings) => MaterialPageRoute(
