@@ -2,16 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:nlpf2/properties/properties.dart';
 import 'package:nlpf2/properties/map.dart';
 
-selectTypeIcon(propertyType) {
-  switch (propertyType) {
-    case "Maison":
-      return Scaffold(body: Image.asset('maison.png'));
-    case "Appartement":
-      return Scaffold(body: Image.asset('appartement.png'));
-    case "Dépendance":
-      return Scaffold(body: Image.asset('dependance.png'));
-    default:
-      return Scaffold(body: Image.asset('autres.png'));
+/// This is the stateless widget that the main application instantiates.
+class Listing extends StatefulWidget {
+  const Listing({Key? key, required this.properties}) : super(key: key);
+  final List<Property> properties;
+  @override
+  State<Listing> createState() => _ListingState();
+}
+
+class _ListingState extends State<Listing> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+        padding: const EdgeInsets.all(8.0),
+        itemExtent: 106.0,
+        children: [
+          for (var property in widget.properties)
+            CustomListItem(property: property),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PropertyMap()));
+              },
+              child: const Text('Afficher la carte'))
+        ]);
   }
 }
 
@@ -41,6 +57,19 @@ class CustomListItem extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+selectTypeIcon(propertyType) {
+  switch (propertyType) {
+    case "Maison":
+      return Scaffold(body: Image.asset('maison.png'));
+    case "Appartement":
+      return Scaffold(body: Image.asset('appartement.png'));
+    case "Dépendance":
+      return Scaffold(body: Image.asset('dependance.png'));
+    default:
+      return Scaffold(body: Image.asset('autres.png'));
   }
 }
 
@@ -83,58 +112,3 @@ class _PropertyDetails extends StatelessWidget {
     );
   }
 }
-
-/// This is the stateless widget that the main application instantiates.
-class Listing extends StatefulWidget {
-  const Listing({Key? key, required this.properties}) : super(key: key);
-  final List<Property> properties;
-  @override
-  State<Listing> createState() => _ListingState();
-}
-
-class _ListingState extends State<Listing> {
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-        padding: const EdgeInsets.all(8.0),
-        itemExtent: 106.0,
-        children: [
-          for (var property in widget.properties)
-            CustomListItem(property: property),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PropertyMap()));
-              },
-              child: const Text('Afficher la carte'))
-        ]);
-  }
-}
-
-/*
-class Listing extends StatefulWidget {
-  const Listing({Key? key, required this.properties}) : super(key: key);
-  final List<Property> properties;
-  @override
-  State<Listing> createState() => _ListingState();
-}
-
-class _ListingState extends State<Listing> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      const Text('Listing'),
-      for (var property in widget.properties)
-        Text(property.city + ' ' + property.price.toString()),
-      ElevatedButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const PropertyMap()));
-          },
-          child: const Text('Display The Map'))
-    ]);
-  }
-}
-*/
