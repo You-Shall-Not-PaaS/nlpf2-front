@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const Navbar(child: Home()),
-          '/listing': (context) => const Navbar(child: Properties()),
+          '/listing': (context) => const Navbar(child: Properties())
         },
         theme: ThemeData(
           primaryColor: Colors.blue,

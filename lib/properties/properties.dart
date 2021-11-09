@@ -3,14 +3,38 @@ import 'package:nlpf2/properties/filter.dart';
 import 'package:nlpf2/properties/listing.dart';
 
 class Property {
-  final int price;
-  final String city;
-  Property({required this.price, required this.city});
+  final String commune;
+  final String type_local;
+  final int valeur_fonciere;
+  final int surface_reelle_bati;
+  Property(
+      {required this.commune,
+      required this.type_local,
+      required this.valeur_fonciere,
+      required this.surface_reelle_bati});
 }
 
 List<Property> mock = [
-  Property(price: 100, city: "Paris"),
-  Property(price: 50, city: "Lyon"),
+  Property(
+      commune: "PARIS",
+      type_local: "Maison",
+      valeur_fonciere: 200000,
+      surface_reelle_bati: 250),
+  Property(
+      commune: "LYON",
+      type_local: "Appartement",
+      valeur_fonciere: 150000,
+      surface_reelle_bati: 50),
+  Property(
+      commune: "PERPIZOO",
+      type_local: "Maison",
+      valeur_fonciere: 290000000,
+      surface_reelle_bati: 1500),
+  Property(
+      commune: "TOURCOING",
+      type_local: "osef",
+      valeur_fonciere: 10000,
+      surface_reelle_bati: 8)
 ];
 
 List<Property> getProperties(Filters? filters) {
@@ -19,9 +43,10 @@ List<Property> getProperties(Filters? filters) {
   List<Property> res = [];
   for (var property in mock) {
     if ((!filters.cities.isNotEmpty ||
-            filters.cities.contains(property.city)) &&
-        property.price >= filters.minPrice &&
-        (filters.maxPrice == -1 || property.price <= filters.maxPrice)) {
+            filters.cities.contains(property.commune)) &&
+        property.valeur_fonciere >= filters.minPrice &&
+        (filters.maxPrice == -1 ||
+            property.valeur_fonciere <= filters.maxPrice)) {
       res.add(property);
     }
   }
