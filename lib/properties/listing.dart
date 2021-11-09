@@ -2,6 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:nlpf2/properties/properties.dart';
 import 'package:nlpf2/properties/map.dart';
 
+selectTypeIcon(propertyType) {
+  switch (propertyType) {
+    case "Maison":
+      return Scaffold(body: Image.asset('maison.png'));
+    case "Appartement":
+      return Scaffold(body: Image.asset('appartement.png'));
+    case "Dépendance":
+      return Scaffold(body: Image.asset('dependance.png'));
+    default:
+      return Scaffold(body: Image.asset('autres.png'));
+  }
+}
+
 class CustomListItem extends StatelessWidget {
   const CustomListItem({Key? key, required this.property}) : super(key: key);
 
@@ -14,12 +27,7 @@ class CustomListItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: Container(
-              decoration: const BoxDecoration(color: Colors.blue),
-            ),
-          ),
+          Expanded(flex: 2, child: selectTypeIcon(property.type_local)),
           Expanded(
             flex: 3,
             child: _PropertyDetails(
