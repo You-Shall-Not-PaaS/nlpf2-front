@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nlpf2/properties/properties.dart';
 import 'package:nlpf2/properties/map.dart';
+import 'package:nlpf2/service/service.dart';
 
 /// This is the stateless widget that the main application instantiates.
 class Listing extends StatefulWidget {
@@ -72,13 +72,13 @@ class CustomListItem extends StatelessWidget {
 selectTypeIcon(propertyType) {
   switch (propertyType) {
     case "Maison":
-      return Scaffold(body: Image.asset('maison.png'));
+      return Image.asset('maison.png');
     case "Appartement":
-      return Scaffold(body: Image.asset('appartement.png'));
+      return Image.asset('appartement.png');
     case "Dépendance":
-      return Scaffold(body: Image.asset('dependance.png'));
+      return Image.asset('dependance.png');
     default:
-      return Scaffold(body: Image.asset('autres.png'));
+      return Image.asset('autres.png');
   }
 }
 
