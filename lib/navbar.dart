@@ -30,7 +30,7 @@ class Navbar extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, '/listing');
               },
               child: const Text('Listing'),
-            ),
+            )
           ],
         ),
         body: Center(child: child));

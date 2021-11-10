@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:nlpf2/service/cities.dart';
 
 class FilterWidget extends StatefulWidget {
   const FilterWidget({Key? key, required this.refreshProperties})
@@ -14,20 +15,15 @@ class FilterWidget extends StatefulWidget {
 class Filters {
   int minPrice = -1;
   int maxPrice = -1;
-  int minRooms = 0;
-  int maxRooms = 10;
+  int minRooms = -1;
+  int maxRooms = -1;
+  int surfaceMin = -1;
+  int surfaceMax = -1;
   List<Object?> cities = [];
 }
 
 class _FilterWidgetState extends State<FilterWidget> {
   final Filters _filters = Filters();
-  static List<String> cities = [
-    'Paris',
-    'Lyon',
-    'Marseille',
-    'Toulouse',
-    'Lille'
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +35,7 @@ class _FilterWidgetState extends State<FilterWidget> {
           title: const Text('Villes'),
           buttonText: const Text("Villes"),
           //selectedColor: Colors.purple,
-          listType: MultiSelectListType.CHIP,
+          listType: MultiSelectListType.LIST,
           searchable: true,
           onConfirm: (values) {
             setState(() {
