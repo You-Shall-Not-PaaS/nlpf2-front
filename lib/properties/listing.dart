@@ -32,7 +32,8 @@ class _ListingState extends State<Listing> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PropertyMap(widget.properties)));
+                        builder: (context) =>
+                            PropertyMap(properties: widget.properties)));
               },
               child: const Text('Afficher la carte'))),
       const SizedBox(height: 20) //padding

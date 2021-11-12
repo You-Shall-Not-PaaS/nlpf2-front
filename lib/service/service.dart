@@ -1,14 +1,35 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:latlong2/latlong.dart';
 import 'package:nlpf2/properties/filter.dart';
+
+const geoapifyKey = "ba7327de7fe34f90818b38e7da9b982e";
 
 const backURL =
     'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/test1';
 
+getLocations(List<Property> properties) {
+  mock.forEach((Property property) async {
+    if (property.pos == null) {
+      final uri =
+          "https://api.geoapify.com/v1/geocode/search?text=${property.code_voie.toString()}%20${property.type_de_voie}%20${property.voie!.replaceAll(" ", "%20")}%20${property.commune.replaceAll(" ", "%20")}&apiKey=$geoapifyKey";
+      print(uri);
+      final response = await http.get(Uri.parse(uri));
+      if (response.statusCode == 200) {
+        final jsonBody = jsonDecode(response.body);
+        print(jsonBody["lat"]);
+        //property.pos = LatLng(jsonBody["lat"], jsonBody["lon"]);
+        //print(property.pos);
+      }
+    }
+  });
+}
+
 Future<List<Property>> getProperties(Filters? filters) async {
+  getLocations(mock);
+  return mock;
   final response = await http.get(Uri.parse(backURL + '/properties'));
   if (response.statusCode == 200) {
-    // return mock;
     final jsonBody = jsonDecode(response.body);
     List<Property> properties = [];
     for (var property in jsonBody) {
@@ -43,6 +64,7 @@ class Property {
   final int nombre_pieces_principales;
   final String? nature_culture;
   final int? surface_terrain;
+  LatLng? pos;
 
   Property(
       {this.id,
@@ -67,7 +89,8 @@ class Property {
       required this.surface_reelle_bati,
       required this.nombre_pieces_principales,
       this.nature_culture,
-      this.surface_terrain});
+      this.surface_terrain,
+      this.pos});
 
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
@@ -101,24 +124,36 @@ List<Property> mock = [
   Property(
       commune: "PARIS",
       type_local: "Maison",
+      code_voie: "42",
+      type_de_voie: "rue",
+      voie: "de Cronstadt",
       valeur_fonciere: 200000,
       surface_reelle_bati: 250,
       nombre_pieces_principales: 5),
   Property(
-      commune: "LYON",
+      commune: "ASNIERES-SUR-SEINE",
       type_local: "Appartement",
+      type_de_voie: "rue",
+      code_voie: "15",
+      voie: "albert premier",
       valeur_fonciere: 150000,
       surface_reelle_bati: 50,
       nombre_pieces_principales: 5),
   Property(
-      commune: "PERPIZOO",
+      commune: "CRETEIL",
       type_local: "Maison",
+      type_de_voie: "avenue",
+      code_voie: "42",
+      voie: "Magellan",
       valeur_fonciere: 290000000,
       surface_reelle_bati: 1500,
       nombre_pieces_principales: 5),
   Property(
-      commune: "TOULOUSE",
-      type_local: "Dépendance",
+      commune: "Paris",
+      type_local: "Appartement",
+      type_de_voie: "rue",
+      code_voie: "15",
+      voie: "Palestro",
       valeur_fonciere: 45000,
       surface_reelle_bati: 132,
       nombre_pieces_principales: 5),
