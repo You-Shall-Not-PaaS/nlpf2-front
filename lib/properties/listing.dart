@@ -26,16 +26,16 @@ class _ListingState extends State<Listing> {
                           horizontal: BorderSide(color: Colors.blueGrey))),
                   child: CustomListItem(property: property))
           ])),
-      IntrinsicHeight(
-          child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            PropertyMap(properties: widget.properties)));
-              },
-              child: const Text('Afficher la carte'))),
+      const SizedBox(height: 20), //padding
+      ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        PropertyMap(properties: widget.properties)));
+          },
+          child: const Text('Afficher la carte')),
       const SizedBox(height: 20) //padding
     ]);
   }

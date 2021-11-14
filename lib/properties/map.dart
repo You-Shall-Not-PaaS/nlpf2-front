@@ -55,12 +55,14 @@ class _PropertyMapState extends State<PropertyMap> {
           MarkerLayerOptions(markers: _markers),
         ],
       )),
+      const SizedBox(height: 20), //padding
       IntrinsicHeight(
           child: ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Hide The Map')))
+              child: const Text('Hide The Map'))),
+      const SizedBox(height: 20), //padding
     ]);
   }
 }

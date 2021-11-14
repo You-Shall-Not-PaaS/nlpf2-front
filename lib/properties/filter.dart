@@ -27,7 +27,7 @@ class _FilterWidgetState extends State<FilterWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+    return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
       MultiSelectDialogField(
           items: cities
               .map((city) => MultiSelectItem<String>(city, city))
@@ -51,6 +51,7 @@ class _FilterWidgetState extends State<FilterWidget> {
               widget.refreshProperties(_filters);
             },
           )),
+      const SizedBox(width: 60), //padding
       SizedBox(
           width: 80,
           child: TextField(
@@ -65,6 +66,7 @@ class _FilterWidgetState extends State<FilterWidget> {
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ])),
+      const SizedBox(width: 20), //padding
       SizedBox(
           width: 80,
           child: TextField(
@@ -79,6 +81,7 @@ class _FilterWidgetState extends State<FilterWidget> {
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ])),
+      const SizedBox(width: 60), //padding
       SizedBox(
           width: 100,
           child: TextField(
@@ -93,6 +96,7 @@ class _FilterWidgetState extends State<FilterWidget> {
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ])),
+      const SizedBox(width: 20), //padding
       SizedBox(
           width: 100,
           child: TextField(
@@ -107,6 +111,37 @@ class _FilterWidgetState extends State<FilterWidget> {
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ])),
+      const SizedBox(width: 60), //padding
+      SizedBox(
+          width: 100,
+          child: TextField(
+              decoration: const InputDecoration(labelText: "Surface Min"),
+              keyboardType: TextInputType.number,
+              onSubmitted: (surfaceMin) {
+                setState(() {
+                  _filters.surfaceMin = int.parse(surfaceMin);
+                });
+                widget.refreshProperties(_filters);
+              },
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+              ])),
+      const SizedBox(width: 20), //padding
+      SizedBox(
+          width: 100,
+          child: TextField(
+              decoration: const InputDecoration(labelText: "Surface Max"),
+              keyboardType: TextInputType.number,
+              onSubmitted: (surfaceMax) {
+                setState(() {
+                  _filters.surfaceMax = int.parse(surfaceMax);
+                });
+                widget.refreshProperties(_filters);
+              },
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+              ])),
+      const SizedBox(width: 20), //padding
     ]);
   }
 }
