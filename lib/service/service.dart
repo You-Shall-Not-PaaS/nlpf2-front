@@ -6,7 +6,8 @@ const backURL =
     'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/test1';
 
 Future<List<Property>> getProperties(Filters? filters) async {
-  final response = await http.get(Uri.parse(backURL + '/properties'));
+  return mock;
+/*  final response = await http.get(Uri.parse(backURL + '/properties'));
   if (response.statusCode == 200) {
     // return mock;
     final jsonBody = jsonDecode(response.body);
@@ -16,7 +17,7 @@ Future<List<Property>> getProperties(Filters? filters) async {
     }
     return properties;
   }
-  throw Exception("Erreur lors de la récupération des propriétés.");
+  throw Exception("Erreur lors de la récupération des propriétés.");*/
 }
 
 class Property {
@@ -100,6 +101,10 @@ class Property {
 List<Property> mock = [
   Property(
       commune: "PARIS",
+      no_voie: "3",
+      type_de_voie: "rue",
+      voie: "de l'eau",
+      code_postal: "94682",
       type_local: "Maison",
       valeur_fonciere: 200000,
       surface_reelle_bati: 250,
