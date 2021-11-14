@@ -13,17 +13,18 @@ class _PropertiesState extends State<Properties> {
   var keyOne = GlobalKey<NavigatorState>();
   var keyTwo = GlobalKey<NavigatorState>();
   Future<List<Property>>? _properties;
+  final _page = 15;
 
   void refreshProperties(Filters filters) {
     setState(() {
-      _properties = getProperties(filters);
+      _properties = getProperties(_page, filters);
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _properties = getProperties(null);
+    _properties = getProperties(_page, null);
   }
 
   @override
@@ -45,7 +46,8 @@ class _PropertiesState extends State<Properties> {
                         future: _properties,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            return Listing(properties: snapshot.data!);
+                            return Listing(
+                                properties: snapshot.data!, page: _page);
                           } else if (snapshot.hasError) {
                             return Text('${snapshot.error}');
                           }

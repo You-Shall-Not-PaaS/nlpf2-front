@@ -13,11 +13,27 @@ class PropertyMap extends StatefulWidget {
 class _PropertyMapState extends State<PropertyMap> {
   List<Marker> _markers = [];
 
+  int _markerNumber = 0;
+  double _avgLat = 0;
+  double _avgLon = 0;
+  double _minLon = 360;
+  double _maxLon = 0;
+  double _minLat = 360;
+  double _maxLat = 0;
+
   @override
   void initState() {
-    super.initState();
     widget.properties.forEach((property) {
       if (property.pos != null) {
+        final lat = property.pos!.latitude;
+        final lon = property.pos!.longitude;
+        _markerNumber++;
+        _avgLat += lat;
+        _avgLon += lon;
+        _minLon = _minLon < lon + 180 ? _minLon : lon + 180;
+        _maxLon = _maxLon > lon + 180 ? _maxLon : lon + 180;
+        _minLat = _minLat < lat + 180 ? _minLat : lat + 180;
+        _maxLat = _maxLat > lat + 180 ? _maxLat : lat + 180;
         _markers.add(Marker(
             width: 80.0,
             height: 80.0,
@@ -32,6 +48,7 @@ class _PropertyMapState extends State<PropertyMap> {
                 child: const Icon(Icons.pin_drop_sharp, color: Colors.red))));
       }
     });
+    super.initState();
   }
 
   @override
@@ -40,9 +57,10 @@ class _PropertyMapState extends State<PropertyMap> {
       Expanded(
           child: FlutterMap(
         options: MapOptions(
-          center: LatLng(48.8566, 2.3522),
-          zoom: 13.0,
-        ),
+            center: LatLng(_avgLat / _markerNumber, _avgLon / _markerNumber),
+            zoom: (_maxLon - _minLon) > (_maxLat - _minLat)
+                ? (_maxLon - _minLon) * 20
+                : (_maxLat - _minLat)),
         layers: [
           TileLayerOptions(
             urlTemplate:
