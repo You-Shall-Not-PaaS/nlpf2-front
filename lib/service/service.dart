@@ -61,6 +61,7 @@ String createFilterUri(int page, Filters filters) {
 Future<List<Property>> getProperties(int page, Filters filters) async {
   //getLocations(mock);
   //return mock;
+  page--;
   final response = await http.get(Uri.parse(createFilterUri(page, filters)));
   if (response.statusCode == 200) {
     final jsonBody = jsonDecode(response.body);

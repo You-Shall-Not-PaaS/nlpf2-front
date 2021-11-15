@@ -14,7 +14,7 @@ class _PropertiesState extends State<Properties> {
   var keyOne = GlobalKey<NavigatorState>();
   var keyTwo = GlobalKey<NavigatorState>();
   Future<List<Property>>? _properties;
-  int _page = 0;
+  int _page = 1;
   final pageField = TextEditingController();
   Filters _filters = Filters();
 
@@ -22,6 +22,7 @@ class _PropertiesState extends State<Properties> {
     setState(() {
       _filters = filters;
       _properties = getProperties(_page, _filters);
+      _page = 1;
     });
   }
 
@@ -71,7 +72,7 @@ class _PropertiesState extends State<Properties> {
             ),
             onTap: () {
               setState(() {
-                if (_page > 0) {
+                if (_page > 1) {
                   _page--;
                   _properties = getProperties(_page, _filters);
                 }
