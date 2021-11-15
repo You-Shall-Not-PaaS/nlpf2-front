@@ -45,7 +45,18 @@ class _PropertyMapState extends State<PropertyMap> {
                       MaterialPageRoute(
                           builder: (context) => PopUp(property: property)));
                 },
-                child: const Icon(Icons.pin_drop_sharp, color: Colors.red))));
+                child: Tooltip(
+                    padding: const EdgeInsets.all(10),
+                    textStyle:
+                        const TextStyle(fontSize: 20, color: Colors.white),
+                    message: property.type_local +
+                        "   " +
+                        property.surface_reelle_bati.toString() +
+                        "m²   " +
+                        property.valeur_fonciere.toString() +
+                        "€",
+                    child:
+                        const Icon(Icons.pin_drop_sharp, color: Colors.red)))));
       }
     });
     super.initState();
