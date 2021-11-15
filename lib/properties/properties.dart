@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nlpf2/properties/filter.dart';
 import 'package:nlpf2/properties/listing.dart';
+import 'package:nlpf2/properties/map.dart';
 import 'package:nlpf2/service/service.dart';
+import 'package:tuple/tuple.dart';
 
 class Properties extends StatefulWidget {
   const Properties({Key? key}) : super(key: key);
@@ -13,23 +15,34 @@ class Properties extends StatefulWidget {
 class _PropertiesState extends State<Properties> {
   var keyOne = GlobalKey<NavigatorState>();
   var keyTwo = GlobalKey<NavigatorState>();
-  Future<List<Property>>? _properties;
+  final GlobalKey<PropertyMapState> _mapKey = GlobalKey();
+
+  Future<Tuple2<List<Property>, List<Future<Property?>>>>? _propertiesLocations;
+
   int _page = 1;
   final pageField = TextEditingController();
   Filters _filters = Filters();
+  bool _showMap = false;
+
+  refreshProperties() {
+    _propertiesLocations = getProperties(_page, _filters);
+  }
 
   void setFilters(Filters filters) {
     setState(() {
-      _filters = filters;
-      _properties = getProperties(_page, _filters);
       _page = 1;
+      _filters = filters;
+      if (_mapKey.currentState != null) {
+        _mapKey.currentState!.refreshMarkers();
+      }
+      refreshProperties();
     });
   }
 
   @override
   void initState() {
+    refreshProperties();
     super.initState();
-    _properties = getProperties(_page, _filters);
   }
 
   @override
@@ -46,12 +59,16 @@ class _PropertiesState extends State<Properties> {
           child: Navigator(
               key: keyTwo,
               onGenerateRoute: (routeSettings) => MaterialPageRoute(
-                  builder: (context) => FutureBuilder<List<Property>>(
-                        future: _properties,
+                  builder: (context) => FutureBuilder<
+                          Tuple2<List<Property>, List<Future<Property?>>>>(
+                        future: _propertiesLocations,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            return Listing(
-                                properties: snapshot.data!, page: _page);
+                            return _showMap
+                                ? PropertyMap(
+                                    key: _mapKey,
+                                    propertiesLocations: snapshot.data!)
+                                : Listing(properties: snapshot.data!);
                           } else if (snapshot.hasError) {
                             return Text('${snapshot.error}');
                           }
@@ -60,6 +77,17 @@ class _PropertiesState extends State<Properties> {
                           return const CircularProgressIndicator();
                         },
                       )))),
+      const SizedBox(height: 20), //padding
+      ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _showMap = !_showMap;
+            });
+          },
+          child: _showMap
+              ? const Text('Revenir aux propriétés')
+              : const Text('Afficher la carte')),
+      const SizedBox(height: 20), //padding
       IntrinsicHeight(
           child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +102,10 @@ class _PropertiesState extends State<Properties> {
               setState(() {
                 if (_page > 1) {
                   _page--;
-                  _properties = getProperties(_page, _filters);
+                  refreshProperties();
+                  if (_mapKey.currentState != null) {
+                    _mapKey.currentState!.refreshMarkers();
+                  }
                 }
               });
             },
@@ -90,8 +121,11 @@ class _PropertiesState extends State<Properties> {
                   onSubmitted: (page) {
                     setState(() {
                       _page = int.parse(page);
-                      _properties = getProperties(_page, _filters);
+                      refreshProperties();
                       pageField.clear();
+                      if (_mapKey.currentState != null) {
+                        _mapKey.currentState!.refreshMarkers();
+                      }
                     });
                   },
                   inputFormatters: <TextInputFormatter>[
@@ -100,10 +134,13 @@ class _PropertiesState extends State<Properties> {
           const SizedBox(width: 20), //padding
           InkWell(
             child: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
-            onTap: () {
+            onTap: () async {
               setState(() {
                 _page++;
-                _properties = getProperties(_page, _filters);
+                refreshProperties();
+                if (_mapKey.currentState != null) {
+                  _mapKey.currentState!.refreshMarkers();
+                }
               });
             },
           ),

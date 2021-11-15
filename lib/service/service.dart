@@ -2,30 +2,16 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:nlpf2/properties/filter.dart';
+import 'package:tuple/tuple.dart';
 
 const geoapifyKey = "ba7327de7fe34f90818b38e7da9b982e";
 
 const backURL = 'http://172.17.179.3:5555';
 
-getLocations(List<Property> properties) {
-  properties.forEach((Property property) async {
-    if (property.pos == null) {
-      final uri =
-          "https://api.geoapify.com/v1/geocode/search?text=${property.code_voie.toString()}%20${property.type_de_voie}%20${property.voie!.replaceAll(" ", "%20")}%20${property.commune.replaceAll(" ", "%20")}&apiKey=$geoapifyKey";
-      final response = await http.get(Uri.parse(uri));
-      if (response.statusCode == 200) {
-        final jsonBody = jsonDecode(response.body);
-        property.pos = LatLng(jsonBody['features'][0]['properties']['lat'],
-            jsonBody['features'][0]['properties']['lon']);
-      }
-    }
-  });
-}
-
 String createFilterUri(int page, Filters filters) {
   String filterString = '?';
   if (filters.cities.isNotEmpty) {
-    filterString += "&cities=";
+    filterString += "&commune=";
     for (var city in filters.cities) {
       filterString += city as String;
       if (city != filters.cities.last) {
@@ -58,7 +44,27 @@ String createFilterUri(int page, Filters filters) {
   return backURL + '/properties/' + page.toString();
 }
 
-Future<List<Property>> getProperties(int page, Filters filters) async {
+List<Future<Property?>> getLocations(List<Property> properties) {
+  return properties
+      .map((Property property) async {
+        if (property.pos == null) {
+          final uri =
+              "https://api.geoapify.com/v1/geocode/search?text=${property.code_voie.toString()}%20${property.type_de_voie}%20${property.voie!.replaceAll(" ", "%20")}%20${property.commune.replaceAll(" ", "%20")}&apiKey=$geoapifyKey";
+          final response = await http.get(Uri.parse(uri));
+          if (response.statusCode == 200) {
+            final jsonBody = jsonDecode(response.body);
+            property.pos = LatLng(jsonBody['features'][0]['properties']['lat'],
+                jsonBody['features'][0]['properties']['lon']);
+          }
+          return property;
+        }
+      })
+      .whereType<Future<Property?>>()
+      .toList();
+}
+
+Future<Tuple2<List<Property>, List<Future<Property?>>>> getProperties(
+    int page, Filters filters) async {
   //getLocations(mock);
   //return mock;
   page--;
@@ -69,8 +75,8 @@ Future<List<Property>> getProperties(int page, Filters filters) async {
     for (var property in jsonBody['data']) {
       properties.add(Property.fromJson(property));
     }
-    getLocations(properties);
-    return properties;
+    final List<Future<Property?>> locations = getLocations(properties);
+    return Tuple2(properties, locations);
   }
   throw Exception("Erreur lors de la récupération des propriétés.");
 }

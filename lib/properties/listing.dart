@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:nlpf2/properties/map.dart';
 import 'package:nlpf2/service/service.dart';
+import 'package:tuple/tuple.dart';
 
 /// This is the stateless widget that the main application instantiates.
 class Listing extends StatefulWidget {
-  const Listing({Key? key, required this.properties, required this.page})
-      : super(key: key);
-  final List<Property> properties;
-  final int page;
+  const Listing({Key? key, required this.properties}) : super(key: key);
+  final Tuple2<List<Property>, List<Future<Property?>>> properties;
   @override
   State<Listing> createState() => _ListingState();
 }
@@ -15,31 +13,17 @@ class Listing extends StatefulWidget {
 class _ListingState extends State<Listing> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Expanded(
-          child: ListView(
-              padding: const EdgeInsets.all(8.0),
-              itemExtent: 106.0,
-              children: [
-            for (var property in widget.properties)
-              Container(
-                  decoration: const BoxDecoration(
-                      border: Border.symmetric(
-                          horizontal: BorderSide(color: Colors.blueGrey))),
-                  child: CustomListItem(property: property))
-          ])),
-      const SizedBox(height: 20), //padding
-      ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        PropertyMap(properties: widget.properties)));
-          },
-          child: const Text('Afficher la carte')),
-      const SizedBox(height: 20) //padding
-    ]);
+    return ListView(
+        padding: const EdgeInsets.all(8.0),
+        itemExtent: 106.0,
+        children: [
+          for (var property in widget.properties.item1)
+            Container(
+                decoration: const BoxDecoration(
+                    border: Border.symmetric(
+                        horizontal: BorderSide(color: Colors.blueGrey))),
+                child: CustomListItem(property: property))
+        ]);
   }
 }
 
