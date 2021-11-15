@@ -5,7 +5,7 @@ import 'package:nlpf2/properties/filter.dart';
 
 const geoapifyKey = "ba7327de7fe34f90818b38e7da9b982e";
 
-const backURL = 'http://172.28.9.121:5555';
+const backURL = 'http://172.17.179.3:5555';
 
 getLocations(List<Property> properties) {
   properties.forEach((Property property) async {
@@ -22,43 +22,43 @@ getLocations(List<Property> properties) {
   });
 }
 
-String createFilterUri(int page, Filters? filters) {
-  if (filters == null) {
-    return backURL + '/properties/' + page.toString();
-  }
-  String res = backURL + '/properties-filter/' + page.toString() + '?';
+String createFilterUri(int page, Filters filters) {
+  String filterString = '?';
   if (filters.cities.isNotEmpty) {
-    res += "&cities=";
+    filterString += "&cities=";
     for (var city in filters.cities) {
-      res += city as String;
+      filterString += city as String;
       if (city != filters.cities.last) {
-        res += ",";
+        filterString += ",";
       }
     }
   }
   if (filters.minPrice != -1) {
-    res += "&minPrice=" + filters.minPrice.toString();
+    filterString += "&minPrice=" + filters.minPrice.toString();
   }
   if (filters.maxPrice != -1) {
-    res += "&maxPrice=" + filters.maxPrice.toString();
+    filterString += "&maxPrice=" + filters.maxPrice.toString();
   }
   if (filters.minRooms != -1) {
-    res += "&minRooms=" + filters.minRooms.toString();
+    filterString += "&minRooms=" + filters.minRooms.toString();
   }
   if (filters.maxRooms != -1) {
-    res += "&maxRooms=" + filters.maxPrice.toString();
+    filterString += "&maxRooms=" + filters.maxRooms.toString();
   }
   if (filters.surfaceMin != -1) {
-    res += "&minSize=" + filters.surfaceMin.toString();
+    filterString += "&minSize=" + filters.surfaceMin.toString();
   }
   if (filters.surfaceMax != -1) {
-    res += "&maxSize=" + filters.surfaceMax.toString();
+    filterString += "&maxSize=" + filters.surfaceMax.toString();
+  }
+  if (filterString != "?") {
+    return backURL + '/properties-filter/' + page.toString() + filterString;
   }
 
-  return res;
+  return backURL + '/properties/' + page.toString();
 }
 
-Future<List<Property>> getProperties(int page, Filters? filters) async {
+Future<List<Property>> getProperties(int page, Filters filters) async {
   //getLocations(mock);
   //return mock;
   final response = await http.get(Uri.parse(createFilterUri(page, filters)));

@@ -4,9 +4,8 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:nlpf2/service/cities.dart';
 
 class FilterWidget extends StatefulWidget {
-  const FilterWidget({Key? key, required this.refreshProperties})
-      : super(key: key);
-  final Function(Filters filters) refreshProperties;
+  const FilterWidget({Key? key, required this.setFilters}) : super(key: key);
+  final Function(Filters filters) setFilters;
 
   @override
   State<FilterWidget> createState() => _FilterWidgetState();
@@ -41,14 +40,14 @@ class _FilterWidgetState extends State<FilterWidget> {
             setState(() {
               _filters.cities = values;
             });
-            widget.refreshProperties(_filters);
+            widget.setFilters(_filters);
           },
           chipDisplay: MultiSelectChipDisplay(
             onTap: (value) {
               setState(() {
                 _filters.cities.remove(value);
               });
-              widget.refreshProperties(_filters);
+              widget.setFilters(_filters);
             },
           )),
       const SizedBox(width: 60), //padding
@@ -59,9 +58,13 @@ class _FilterWidgetState extends State<FilterWidget> {
               keyboardType: TextInputType.number,
               onSubmitted: (minPrice) {
                 setState(() {
-                  _filters.minPrice = int.parse(minPrice);
+                  if (minPrice == "") {
+                    _filters.minPrice = -1;
+                  } else {
+                    _filters.minPrice = int.parse(minPrice);
+                  }
                 });
-                widget.refreshProperties(_filters);
+                widget.setFilters(_filters);
               },
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
@@ -74,9 +77,13 @@ class _FilterWidgetState extends State<FilterWidget> {
               keyboardType: TextInputType.number,
               onSubmitted: (maxPrice) {
                 setState(() {
-                  _filters.maxPrice = int.parse(maxPrice);
+                  if (maxPrice == "") {
+                    _filters.maxPrice = -1;
+                  } else {
+                    _filters.maxPrice = int.parse(maxPrice);
+                  }
                 });
-                widget.refreshProperties(_filters);
+                widget.setFilters(_filters);
               },
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
@@ -89,9 +96,13 @@ class _FilterWidgetState extends State<FilterWidget> {
               keyboardType: TextInputType.number,
               onSubmitted: (minRooms) {
                 setState(() {
-                  _filters.minRooms = int.parse(minRooms);
+                  if (minRooms == "") {
+                    _filters.minRooms = -1;
+                  } else {
+                    _filters.minRooms = int.parse(minRooms);
+                  }
                 });
-                widget.refreshProperties(_filters);
+                widget.setFilters(_filters);
               },
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
@@ -104,9 +115,13 @@ class _FilterWidgetState extends State<FilterWidget> {
               keyboardType: TextInputType.number,
               onSubmitted: (maxRooms) {
                 setState(() {
-                  _filters.maxRooms = int.parse(maxRooms);
+                  if (maxRooms == "") {
+                    _filters.maxRooms = -1;
+                  } else {
+                    _filters.maxRooms = int.parse(maxRooms);
+                  }
                 });
-                widget.refreshProperties(_filters);
+                widget.setFilters(_filters);
               },
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
@@ -119,9 +134,13 @@ class _FilterWidgetState extends State<FilterWidget> {
               keyboardType: TextInputType.number,
               onSubmitted: (surfaceMin) {
                 setState(() {
-                  _filters.surfaceMin = int.parse(surfaceMin);
+                  if (surfaceMin == "") {
+                    _filters.surfaceMin = -1;
+                  } else {
+                    _filters.surfaceMin = int.parse(surfaceMin);
+                  }
                 });
-                widget.refreshProperties(_filters);
+                widget.setFilters(_filters);
               },
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
@@ -134,9 +153,13 @@ class _FilterWidgetState extends State<FilterWidget> {
               keyboardType: TextInputType.number,
               onSubmitted: (surfaceMax) {
                 setState(() {
-                  _filters.surfaceMax = int.parse(surfaceMax);
+                  if (surfaceMax == "") {
+                    _filters.surfaceMax = -1;
+                  } else {
+                    _filters.surfaceMax = int.parse(surfaceMax);
+                  }
                 });
-                widget.refreshProperties(_filters);
+                widget.setFilters(_filters);
               },
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly

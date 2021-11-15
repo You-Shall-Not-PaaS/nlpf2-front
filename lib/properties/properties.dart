@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:nlpf2/properties/filter.dart';
 import 'package:nlpf2/properties/listing.dart';
 import 'package:nlpf2/service/service.dart';
@@ -13,18 +14,21 @@ class _PropertiesState extends State<Properties> {
   var keyOne = GlobalKey<NavigatorState>();
   var keyTwo = GlobalKey<NavigatorState>();
   Future<List<Property>>? _properties;
-  final _page = 15;
+  int _page = 0;
+  final pageField = TextEditingController();
+  Filters _filters = Filters();
 
-  void refreshProperties(Filters filters) {
+  void setFilters(Filters filters) {
     setState(() {
-      _properties = getProperties(_page, filters);
+      _filters = filters;
+      _properties = getProperties(_page, _filters);
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _properties = getProperties(_page, null);
+    _properties = getProperties(_page, _filters);
   }
 
   @override
@@ -35,8 +39,7 @@ class _PropertiesState extends State<Properties> {
           child: Navigator(
               key: keyOne,
               onGenerateRoute: (routeSettings) => MaterialPageRoute(
-                  builder: (context) =>
-                      FilterWidget(refreshProperties: refreshProperties)))),
+                  builder: (context) => FilterWidget(setFilters: setFilters)))),
       const SizedBox(height: 70), //padding
       Expanded(
           child: Navigator(
@@ -55,7 +58,57 @@ class _PropertiesState extends State<Properties> {
                           // By default, show a loading spinner.
                           return const CircularProgressIndicator();
                         },
-                      ))))
+                      )))),
+      IntrinsicHeight(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          InkWell(
+            child: const Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.grey,
+              textDirection: TextDirection.rtl,
+            ),
+            onTap: () {
+              setState(() {
+                if (_page > 0) {
+                  _page--;
+                  _properties = getProperties(_page, _filters);
+                }
+              });
+            },
+          ),
+          const SizedBox(width: 20), //padding
+          SizedBox(
+              width: 20,
+              child: TextField(
+                  controller: pageField,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(hintText: _page.toString()),
+                  keyboardType: TextInputType.number,
+                  onSubmitted: (page) {
+                    setState(() {
+                      _page = int.parse(page);
+                      _properties = getProperties(_page, _filters);
+                      pageField.clear();
+                    });
+                  },
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ])),
+          const SizedBox(width: 20), //padding
+          InkWell(
+            child: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+            onTap: () {
+              setState(() {
+                _page++;
+                _properties = getProperties(_page, _filters);
+              });
+            },
+          ),
+        ],
+      )),
+      const SizedBox(height: 20), //padding
     ]);
   }
 }
