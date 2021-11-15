@@ -111,7 +111,6 @@ class DescriptionWidget extends StatelessWidget {
         Text("Nombre de pièces: " + property.nombre_pieces_principales.toString()),
 
         formatAdress(),
-        const Text("labels: "),
       ],
     ),
     actions: <Widget>[
