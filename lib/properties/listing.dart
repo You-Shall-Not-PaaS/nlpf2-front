@@ -4,8 +4,10 @@ import 'package:nlpf2/service/service.dart';
 
 /// This is the stateless widget that the main application instantiates.
 class Listing extends StatefulWidget {
-  const Listing({Key? key, required this.properties}) : super(key: key);
+  const Listing({Key? key, required this.properties, required this.page})
+      : super(key: key);
   final List<Property> properties;
+  final int page;
   @override
   State<Listing> createState() => _ListingState();
 }
@@ -26,15 +28,16 @@ class _ListingState extends State<Listing> {
                           horizontal: BorderSide(color: Colors.blueGrey))),
                   child: CustomListItem(property: property))
           ])),
-      IntrinsicHeight(
-          child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PropertyMap()));
-              },
-              child: const Text('Afficher la carte'))),
+      const SizedBox(height: 20), //padding
+      ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        PropertyMap(properties: widget.properties)));
+          },
+          child: const Text('Afficher la carte')),
       const SizedBox(height: 20) //padding
     ]);
   }
