@@ -157,6 +157,10 @@ class Property {
 List<Property> mock = [
   Property(
       commune: "PARIS",
+      no_voie: "3",
+      type_de_voie: "rue",
+      voie: "de l'eau",
+      code_postal: "94682",
       type_local: "Maison",
       code_voie: 42,
       type_de_voie: "rue",
