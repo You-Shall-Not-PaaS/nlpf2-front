@@ -23,7 +23,7 @@ class _ListingState extends State<Listing> {
               padding: const EdgeInsets.all(8.0),
               itemExtent: 106.0,
               children: [
-            for (var property in widget.properties)
+            for (var property in widget.properties.item1)
               Container(
                   decoration: const BoxDecoration(
                       border: Border.symmetric(
