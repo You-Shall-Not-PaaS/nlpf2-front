@@ -9,6 +9,25 @@ const geoapifyKey = "ba7327de7fe34f90818b38e7da9b982e";
 const backURL =
     'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';
 
+Future<List<Property>> getSimilar(Property property) async {
+  final body = jsonEncode({"property": property.toJson()});
+  final http.Response response = await http.post(
+      Uri.parse(
+          "https://us-central1-sylvan-harmony-307114.cloudfunctions.net/properties/similar"),
+      headers: {"Content-Type": "application/json"},
+      body: body);
+  print(response);
+  if (response.statusCode == 200) {
+    final jsonBody = jsonDecode(response.body);
+    List<Property> properties = [];
+    for (var property in jsonBody['data']) {
+      properties.add(Property.fromJson(property));
+    }
+    return properties;
+  }
+  throw Exception("Erreur lors de la récupération des biens similaires.");
+}
+
 Future<Label> getLabels(String id) async {
   final response = await http.get(Uri.parse(
       "https://us-central1-sylvan-harmony-307114.cloudfunctions.net/notebien/properties-grade/" +
@@ -167,6 +186,34 @@ class Property {
       this.nature_culture,
       this.surface_terrain,
       this.pos});
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'no_disposition': no_disposition,
+      'date_mutation': date_mutation,
+      'nature_mutation': nature_mutation,
+      'valeur_fonciere': valeur_fonciere,
+      'no_voie': no_voie,
+      'type_de_voie': type_de_voie,
+      'code_voie': code_voie,
+      'voie': voie,
+      'code_postal': code_postal,
+      'commune': commune,
+      'code_departement': code_departement,
+      'code_commune': code_commune,
+      'section': section,
+      'no_plan': no_plan,
+      'premier_lot': premier_lot,
+      'nombre_de_lots': nombre_de_lots,
+      'code_type_local': code_type_local,
+      'type_local': type_local,
+      'surface_reelle_bati': surface_reelle_bati,
+      'nombre_pieces_principales': nombre_pieces_principales,
+      'nature_culture': nature_culture,
+      'surface_terrain': surface_terrain,
+      'pos': pos
+    };
+  }
 
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
