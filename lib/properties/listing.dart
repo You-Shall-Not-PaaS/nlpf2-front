@@ -19,11 +19,12 @@ class _ListingState extends State<Listing> {
             widthFactor: 0.84,
             child: ListView(
                 padding: const EdgeInsets.all(8.0),
-                itemExtent: 200.0,
+                itemExtent: 180.0,
                 children: [
                   for (var property in widget.properties.item1)
                     Container(
-                        margin: const EdgeInsets.only(bottom: 20.0),
+                        margin:
+                            const EdgeInsets.only(bottom: 20.0, right: 10.0),
                         decoration: BoxDecoration(
                           border: Border.all(
                             width: 3,
@@ -58,13 +59,73 @@ class CustomListItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Expanded(flex: 2, child: selectTypeIcon(property.type_local)),
+          Expanded(flex: 3, child: selectTypeIcon(property.type_local)),
+          const Padding(padding: EdgeInsets.symmetric(horizontal: 30.0)),
           Expanded(
-            flex: 3,
-            child: _PropertyDetails(
-              property: property,
-            ),
+            flex: 2,
+            child: Center(
+                child: Row(children: [
+              Icon(
+                Icons.maps_home_work_rounded,
+                color: Colors.blue[200],
+                size: 30.0,
+              ),
+              const Padding(padding: EdgeInsets.symmetric(horizontal: 10.0)),
+              Text(
+                property.type_local ==
+                        "Local industriel. commercial ou assimilé"
+                    ? "Local"
+                    : property.type_local,
+                style: const TextStyle(fontSize: 18.0),
+              )
+            ])),
           ),
+          Expanded(
+            flex: 2,
+            child: Center(
+                child: Row(children: [
+              Icon(
+                Icons.local_offer,
+                color: Colors.yellow[700],
+                size: 30.0,
+              ),
+              const Padding(padding: EdgeInsets.symmetric(horizontal: 10.0)),
+              Text(
+                '${property.valeur_fonciere} €',
+                style: const TextStyle(fontSize: 18.0),
+              )
+            ])),
+          ),
+          Expanded(
+              flex: 2,
+              child: Center(
+                  child: Row(children: [
+                Icon(
+                  Icons.zoom_out_map_rounded,
+                  color: Colors.green[200],
+                  size: 30.0,
+                ),
+                const Padding(padding: EdgeInsets.symmetric(horizontal: 10.0)),
+                Text(
+                  '${property.surface_reelle_bati} m²',
+                  style: const TextStyle(fontSize: 18.0),
+                )
+              ]))),
+          Expanded(
+              flex: 4,
+              child: Center(
+                  child: Row(children: [
+                Icon(
+                  Icons.pin_drop_rounded,
+                  color: Colors.red[400],
+                  size: 30.0,
+                ),
+                const Padding(padding: EdgeInsets.symmetric(horizontal: 10.0)),
+                Text(
+                  property.commune,
+                  style: const TextStyle(fontSize: 18.0),
+                )
+              ]))),
         ],
       ),
     );
@@ -81,45 +142,5 @@ selectTypeIcon(propertyType) {
       return Image.asset('dependance.png');
     default:
       return Image.asset('autres.png');
-  }
-}
-
-class _PropertyDetails extends StatelessWidget {
-  const _PropertyDetails({Key? key, required this.property}) : super(key: key);
-
-  final Property property;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            property.type_local,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14.0,
-            ),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-          Text(
-            property.commune,
-            style: const TextStyle(fontSize: 10.0),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text(
-            '${property.valeur_fonciere} €',
-            style: const TextStyle(fontSize: 10.0),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text(
-            '${property.surface_reelle_bati} m²',
-            style: const TextStyle(fontSize: 10.0),
-          )
-        ],
-      ),
-    );
   }
 }
