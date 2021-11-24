@@ -5,7 +5,32 @@ import 'package:nlpf2/properties/filter.dart';
 
 const geoapifyKey = "ba7327de7fe34f90818b38e7da9b982e";
 
-const backURL = 'http://172.28.9.121:5555';
+const backURL =
+    'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';
+
+Future<Label> getLabels(String id) async {
+  final response = await http.get(Uri.parse(
+      "https://us-central1-sylvan-harmony-307114.cloudfunctions.net/notebien/properties-grade/" +
+          id.toString()));
+  //await http.get(Uri.parse(backURL + "/properties-grade/" + id.toString()));
+  if (response.statusCode == 200) {
+    final jsonBody = jsonDecode(response.body);
+    Label label = Label.fromJson(jsonBody);
+    return label;
+  }
+  throw Exception("Erreur lors de la récupération des labels.");
+}
+
+Future<int> getAverageTownPrice(String id) async {
+  final response = await http.get(
+      Uri.parse(backURL + "/properties/town/average-price/" + id.toString()));
+  //Uri.parse(backURL + "/properties/town/average-price/" + id.toString()));
+  if (response.statusCode == 200) {
+    final jsonBody = jsonDecode(response.body);
+    return jsonBody['average_price'];
+  }
+  throw Exception("Erreur lors de la récupération du prix moyen de la ville.");
+}
 
 getLocations(List<Property> properties) {
   properties.forEach((Property property) async {
@@ -72,6 +97,16 @@ Future<List<Property>> getProperties(int page, Filters? filters) async {
     return properties;
   }
   throw Exception("Erreur lors de la récupération des propriétés.");
+}
+
+class Label {
+  final int grade;
+
+  Label({required this.grade});
+
+  factory Label.fromJson(Map<String, dynamic> json) {
+    return Label(grade: json['grade']);
+  }
 }
 
 class Property {
@@ -157,6 +192,10 @@ class Property {
 List<Property> mock = [
   Property(
       commune: "PARIS",
+      no_voie: "3",
+      type_de_voie: "rue",
+      voie: "de l'eau",
+      code_postal: "94682",
       type_local: "Maison",
       code_voie: 42,
       type_de_voie: "rue",
