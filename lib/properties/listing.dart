@@ -19,22 +19,22 @@ class _ListingState extends State<Listing> {
         padding: const EdgeInsets.all(8.0),
         itemExtent: 106.0,
         children: [
-      for (var property in widget.properties)
-        Container(
-            decoration: const BoxDecoration(
-                border: Border.symmetric(
-                    horizontal: BorderSide(color: Colors.blueGrey))),
-            child: InkWell(
-                onTap: () => showDialog(
-                      context: context,
-                      builder: (BuildContext dialogContext) {
-                        return DescriptionWidget(property: property);
-                      },
-                    ),
-                // onTap: () => showDialog(context: context, builder: return MyAlertDialog(property: property)), // handle your onTap here
-                child: CustomListItem(property: property))),
-      //   child: CustomListItem(property: property))
-    ]);
+          for (var property in widget.properties.item1)
+            Container(
+                decoration: const BoxDecoration(
+                    border: Border.symmetric(
+                        horizontal: BorderSide(color: Colors.blueGrey))),
+                child: InkWell(
+                    onTap: () => showDialog(
+                          context: context,
+                          builder: (BuildContext dialogContext) {
+                            return DescriptionWidget(property: property);
+                          },
+                        ),
+                    // onTap: () => showDialog(context: context, builder: return MyAlertDialog(property: property)), // handle your onTap here
+                    child: CustomListItem(property: property))),
+          //   child: CustomListItem(property: property))
+        ]);
   }
 }
 
