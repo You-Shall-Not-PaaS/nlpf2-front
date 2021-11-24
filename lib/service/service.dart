@@ -36,7 +36,7 @@ Future<int> getAverageTownPrice(String id) async {
 String createFilterUri(int page, Filters filters) {
   String filterString = '?';
   if (filters.cities.isNotEmpty) {
-    filterString += "&commune=";
+    filterString += "&cities=";
     for (var city in filters.cities) {
       filterString += city as String;
       if (city != filters.cities.last) {

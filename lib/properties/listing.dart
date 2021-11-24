@@ -14,26 +14,35 @@ class Listing extends StatefulWidget {
 class _ListingState extends State<Listing> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        padding: const EdgeInsets.all(8.0),
-        itemExtent: 106.0,
-        children: [
-          for (var property in widget.properties.item1)
-            Container(
-                decoration: const BoxDecoration(
-                    border: Border.symmetric(
-                        horizontal: BorderSide(color: Colors.blueGrey))),
-                child: InkWell(
-                    onTap: () => showDialog(
-                          context: context,
-                          builder: (BuildContext dialogContext) {
-                            return DescriptionWidget(property: property);
-                          },
+    return Center(
+        child: FractionallySizedBox(
+            widthFactor: 0.84,
+            child: ListView(
+                padding: const EdgeInsets.all(8.0),
+                itemExtent: 200.0,
+                children: [
+                  for (var property in widget.properties.item1)
+                    Container(
+                        margin: const EdgeInsets.only(bottom: 20.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 3,
+                            color: Colors.blueGrey,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                    // onTap: () => showDialog(context: context, builder: return MyAlertDialog(property: property)), // handle your onTap here
-                    child: CustomListItem(property: property))),
-          //   child: CustomListItem(property: property))
-        ]);
+                        child: InkWell(
+                            onTap: () => showDialog(
+                                  context: context,
+                                  builder: (BuildContext dialogContext) {
+                                    return DescriptionWidget(
+                                        property: property);
+                                  },
+                                ),
+                            // onTap: () => showDialog(context: context, builder: return MyAlertDialog(property: property)), // handle your onTap here
+                            child: CustomListItem(property: property))),
+                  //   child: CustomListItem(property: property))
+                ])));
   }
 }
 
@@ -55,10 +64,6 @@ class CustomListItem extends StatelessWidget {
             child: _PropertyDetails(
               property: property,
             ),
-          ),
-          const Icon(
-            Icons.more_vert,
-            size: 16.0,
           ),
         ],
       ),
