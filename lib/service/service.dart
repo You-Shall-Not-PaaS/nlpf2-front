@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:nlpf2/properties/filter.dart';
+import 'package:tuple/tuple.dart';
 
 const geoapifyKey = "ba7327de7fe34f90818b38e7da9b982e";
 
@@ -32,60 +33,66 @@ Future<int> getAverageTownPrice(String id) async {
   throw Exception("Erreur lors de la récupération du prix moyen de la ville.");
 }
 
-getLocations(List<Property> properties) {
-  properties.forEach((Property property) async {
-    if (property.pos == null) {
-      final uri =
-          "https://api.geoapify.com/v1/geocode/search?text=${property.code_voie.toString()}%20${property.type_de_voie}%20${property.voie!.replaceAll(" ", "%20")}%20${property.commune.replaceAll(" ", "%20")}&apiKey=$geoapifyKey";
-      final response = await http.get(Uri.parse(uri));
-      if (response.statusCode == 200) {
-        final jsonBody = jsonDecode(response.body);
-        property.pos = LatLng(jsonBody['features'][0]['properties']['lat'],
-            jsonBody['features'][0]['properties']['lon']);
-      }
-    }
-  });
-}
-
-String createFilterUri(int page, Filters? filters) {
-  if (filters == null) {
-    return backURL + '/properties/' + page.toString();
-  }
-  String res = backURL + '/properties-filter/' + page.toString() + '?';
+String createFilterUri(int page, Filters filters) {
+  String filterString = '?';
   if (filters.cities.isNotEmpty) {
-    res += "&cities=";
+    filterString += "&commune=";
     for (var city in filters.cities) {
-      res += city as String;
+      filterString += city as String;
       if (city != filters.cities.last) {
-        res += ",";
+        filterString += ",";
       }
     }
   }
   if (filters.minPrice != -1) {
-    res += "&minPrice=" + filters.minPrice.toString();
+    filterString += "&minPrice=" + filters.minPrice.toString();
   }
   if (filters.maxPrice != -1) {
-    res += "&maxPrice=" + filters.maxPrice.toString();
+    filterString += "&maxPrice=" + filters.maxPrice.toString();
   }
   if (filters.minRooms != -1) {
-    res += "&minRooms=" + filters.minRooms.toString();
+    filterString += "&minRooms=" + filters.minRooms.toString();
   }
   if (filters.maxRooms != -1) {
-    res += "&maxRooms=" + filters.maxPrice.toString();
+    filterString += "&maxRooms=" + filters.maxRooms.toString();
   }
   if (filters.surfaceMin != -1) {
-    res += "&minSize=" + filters.surfaceMin.toString();
+    filterString += "&minSize=" + filters.surfaceMin.toString();
   }
   if (filters.surfaceMax != -1) {
-    res += "&maxSize=" + filters.surfaceMax.toString();
+    filterString += "&maxSize=" + filters.surfaceMax.toString();
+  }
+  if (filterString != "?") {
+    return backURL + '/properties-filter/' + page.toString() + filterString;
   }
 
-  return res;
+  return backURL + '/properties/' + page.toString();
 }
 
-Future<List<Property>> getProperties(int page, Filters? filters) async {
+List<Future<Property?>> getLocations(List<Property> properties) {
+  return properties
+      .map((Property property) async {
+        if (property.pos == null) {
+          final uri =
+              "https://api.geoapify.com/v1/geocode/search?text=${property.code_voie.toString()}%20${property.type_de_voie}%20${property.voie!.replaceAll(" ", "%20")}%20${property.commune.replaceAll(" ", "%20")}&apiKey=$geoapifyKey";
+          final response = await http.get(Uri.parse(uri));
+          if (response.statusCode == 200) {
+            final jsonBody = jsonDecode(response.body);
+            property.pos = LatLng(jsonBody['features'][0]['properties']['lat'],
+                jsonBody['features'][0]['properties']['lon']);
+          }
+          return property;
+        }
+      })
+      .whereType<Future<Property?>>()
+      .toList();
+}
+
+Future<Tuple2<List<Property>, List<Future<Property?>>>> getProperties(
+    int page, Filters filters) async {
   //getLocations(mock);
   //return mock;
+  page--;
   final response = await http.get(Uri.parse(createFilterUri(page, filters)));
   if (response.statusCode == 200) {
     final jsonBody = jsonDecode(response.body);
@@ -93,8 +100,8 @@ Future<List<Property>> getProperties(int page, Filters? filters) async {
     for (var property in jsonBody['data']) {
       properties.add(Property.fromJson(property));
     }
-    getLocations(properties);
-    return properties;
+    final List<Future<Property?>> locations = getLocations(properties);
+    return Tuple2(properties, locations);
   }
   throw Exception("Erreur lors de la récupération des propriétés.");
 }
