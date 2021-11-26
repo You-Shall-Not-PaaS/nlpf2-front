@@ -13,9 +13,6 @@ class Listing extends StatefulWidget {
 }
 
 class _ListingState extends State<Listing> {
-  var keyOne = GlobalKey<NavigatorState>();
-  var keyTwo = GlobalKey<NavigatorState>();
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -28,35 +25,8 @@ class _ListingState extends State<Listing> {
                     border: Border.symmetric(
                         horizontal: BorderSide(color: Colors.blueGrey))),
                 child: InkWell(
-                    onTap: () => showDialog(
-                          context: context,
-                          builder: (BuildContext dialogContext) {
-                            return Column(children: [
-                              Expanded(
-                                  child: Navigator(
-                                      key: keyOne,
-                                      onGenerateRoute: (routeSettings) =>
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DescriptionWidget(
-                                                    property: property,
-                                                    similarKey: keyTwo,
-                                                  )))),
-                              SizedBox(
-                                  height: 150,
-                                  child: Navigator(
-                                      key: keyTwo,
-                                      onGenerateRoute: (routeSettings) =>
-                                          MaterialPageRoute(
-                                              builder: (context) => Expanded(
-                                                  child: Similar(
-                                                      property: property)))))
-                            ]);
-                          },
-                        ),
-                    // onTap: () => showDialog(context: context, builder: return MyAlertDialog(property: property)), // handle your onTap here
+                    onTap: () => openPropertyDialog(context, property),
                     child: CustomListItem(property: property))),
-          //   child: CustomListItem(property: property))
         ]);
   }
 }
@@ -141,4 +111,31 @@ class _PropertyDetails extends StatelessWidget {
       ),
     );
   }
+}
+
+openPropertyDialog(context, property) {
+  var keyOne = GlobalKey<NavigatorState>();
+  var keyTwo = GlobalKey<NavigatorState>();
+  return showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return Column(children: [
+          Expanded(
+              child: Navigator(
+                  key: keyOne,
+                  onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                      builder: (context) => DescriptionWidget(
+                            property: property,
+                            similarKey: keyTwo,
+                          )))),
+          SizedBox(
+              height: 150,
+              child: Navigator(
+                  key: keyTwo,
+                  onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                      builder: (context) => Expanded(
+                          child:
+                              Similar(property: property, dialogKey: keyOne)))))
+        ]);
+      });
 }

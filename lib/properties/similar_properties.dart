@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nlpf2/properties/listing.dart';
-import 'package:nlpf2/properties/map.dart';
 import 'package:nlpf2/service/service.dart';
 
 /// This is the stateless widget that the main application instantiates.
 class Similar extends StatefulWidget {
-  const Similar({Key? key, required this.property}) : super(key: key);
+  const Similar({Key? key, required this.property, required this.dialogKey})
+      : super(key: key);
+  final GlobalKey<NavigatorState> dialogKey;
   final Property property;
   @override
   State<Similar> createState() => _SimilarState();
@@ -26,7 +27,8 @@ class _SimilarState extends State<Similar> {
       future: _similarProperties,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return CustomList(properties: snapshot.data!);
+          return CustomList(
+              properties: snapshot.data!, dialogKey: widget.dialogKey);
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }
@@ -39,8 +41,11 @@ class _SimilarState extends State<Similar> {
 }
 
 class CustomList extends StatelessWidget {
-  const CustomList({Key? key, required this.properties}) : super(key: key);
+  const CustomList(
+      {Key? key, required this.properties, required this.dialogKey})
+      : super(key: key);
   final List<Property> properties;
+  final GlobalKey<NavigatorState> dialogKey;
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -54,7 +59,20 @@ class CustomList extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: CustomListItem(property: property)),
+                  child: Card(
+                      child: InkWell(
+                          child: CustomListItem(property: property),
+                          onTap: () => {
+                                if (dialogKey.currentContext != null)
+                                  {
+                                    Navigator.of(dialogKey.currentContext!,
+                                        rootNavigator: true)
+                                  },
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop(),
+                                openPropertyDialog(context, property)
+                              }),
+                      margin: const EdgeInsets.all(10.0))),
               const SizedBox(width: 10),
             ])
         ]);
