@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nlpf2/properties/description.dart';
+import 'package:nlpf2/properties/similar_properties.dart';
 import 'package:nlpf2/service/service.dart';
 import 'package:tuple/tuple.dart';
 
@@ -12,6 +13,9 @@ class Listing extends StatefulWidget {
 }
 
 class _ListingState extends State<Listing> {
+  var keyOne = GlobalKey<NavigatorState>();
+  var keyTwo = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -27,7 +31,27 @@ class _ListingState extends State<Listing> {
                     onTap: () => showDialog(
                           context: context,
                           builder: (BuildContext dialogContext) {
-                            return DescriptionWidget(property: property);
+                            return Column(children: [
+                              Expanded(
+                                  child: Navigator(
+                                      key: keyOne,
+                                      onGenerateRoute: (routeSettings) =>
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DescriptionWidget(
+                                                    property: property,
+                                                    similarKey: keyTwo,
+                                                  )))),
+                              SizedBox(
+                                  height: 150,
+                                  child: Navigator(
+                                      key: keyTwo,
+                                      onGenerateRoute: (routeSettings) =>
+                                          MaterialPageRoute(
+                                              builder: (context) => Expanded(
+                                                  child: Similar(
+                                                      property: property)))))
+                            ]);
                           },
                         ),
                     // onTap: () => showDialog(context: context, builder: return MyAlertDialog(property: property)), // handle your onTap here
