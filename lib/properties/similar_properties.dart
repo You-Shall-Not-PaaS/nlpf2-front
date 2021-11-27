@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nlpf2/properties/listing.dart';
 import 'package:nlpf2/service/service.dart';
@@ -40,6 +41,15 @@ class _SimilarState extends State<Similar> {
   }
 }
 
+class MyCustomScrollBehavior extends ScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
+}
+
 class CustomList extends StatelessWidget {
   const CustomList(
       {Key? key, required this.properties, required this.dialogKey})
@@ -48,34 +58,35 @@ class CustomList extends StatelessWidget {
   final GlobalKey<NavigatorState> dialogKey;
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.all(8.0),
-        children: [
-          for (var property in properties)
-            Row(children: [
-              const SizedBox(width: 10),
-              Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Card(
-                      child: InkWell(
-                          child: CustomListItem(property: property),
-                          onTap: () => {
-                                if (dialogKey.currentContext != null)
-                                  {
-                                    Navigator.of(dialogKey.currentContext!,
-                                        rootNavigator: true)
-                                  },
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop(),
-                                openPropertyDialog(context, property)
-                              }),
-                      margin: const EdgeInsets.all(10.0))),
-              const SizedBox(width: 10),
-            ])
-        ]);
+    return ScrollConfiguration(
+        behavior: MyCustomScrollBehavior(),
+        child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.all(8.0),
+            children: [
+              for (var property in properties)
+                Row(children: [
+                  const SizedBox(width: 10),
+                  Container(
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Card(
+                          child: InkWell(
+                              child: CustomListItem(property: property),
+                              onTap: () => {
+                                    if (dialogKey.currentContext != null)
+                                      {
+                                        Navigator.of(dialogKey.currentContext!,
+                                            rootNavigator: true)
+                                      },
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop(),
+                                    openPropertyDialog(context, property)
+                                  }))),
+                  const SizedBox(width: 10),
+                ])
+            ]));
   }
 }
 
@@ -110,35 +121,33 @@ class _PropertyDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            property.type_local,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 20.0,
-            ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          property.type_local,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 20.0,
           ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-          Text(
-            property.commune,
-            style: const TextStyle(fontSize: 16.0),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text(
-            '${property.valeur_fonciere} €',
-            style: const TextStyle(fontSize: 16.0),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text(
-            '${property.surface_reelle_bati} m²',
-            style: const TextStyle(fontSize: 16.0),
-          )
-        ],
-      ),
+        ),
+        const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
+        Text(
+          property.commune,
+          style: const TextStyle(fontSize: 16.0),
+        ),
+        const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
+        Text(
+          '${property.valeur_fonciere} €',
+          style: const TextStyle(fontSize: 16.0),
+        ),
+        const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
+        Text(
+          '${property.surface_reelle_bati} m²',
+          style: const TextStyle(fontSize: 16.0),
+        )
+      ],
     );
   }
 }

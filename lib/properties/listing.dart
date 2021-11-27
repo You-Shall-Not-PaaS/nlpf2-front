@@ -133,9 +133,8 @@ openPropertyDialog(context, property) {
               child: Navigator(
                   key: keyTwo,
                   onGenerateRoute: (routeSettings) => MaterialPageRoute(
-                      builder: (context) => Expanded(
-                          child:
-                              Similar(property: property, dialogKey: keyOne)))))
+                      builder: (context) =>
+                          Similar(property: property, dialogKey: keyOne))))
         ]);
       });
 }

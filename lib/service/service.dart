@@ -10,10 +10,8 @@ const backURL =
     'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';
 
 Future<List<Property>> getSimilar(Property property) async {
-  return mock;
-  final http.Response response = await http.get(Uri.parse(
-      "https://us-central1-sylvan-harmony-307114.cloudfunctions.net/properties/similar/" +
-          property.id.toString()));
+  final http.Response response = await http
+      .get(Uri.parse('$backURL/properties/similar/${property.id.toString()}'));
   if (response.statusCode == 200) {
     final jsonBody = jsonDecode(response.body);
     List<Property> properties = [];
@@ -240,6 +238,7 @@ class Property {
   }
 }
 
+/*
 List<Property> mock = [
   Property(
       commune: "PARIS",
@@ -302,4 +301,4 @@ List<Property> mock = [
       valeur_fonciere: 5165,
       surface_reelle_bati: 8,
       nombre_pieces_principales: 5)
-];
+];*/
