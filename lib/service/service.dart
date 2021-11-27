@@ -11,12 +11,11 @@ const backURL =
 
 Future<Label> getLabels(String id) async {
   final response = await http.get(Uri.parse(
-      "https://us-central1-sylvan-harmony-307114.cloudfunctions.net/notebien/properties-grade/" +
-          id.toString()));
-  //await http.get(Uri.parse(backURL + "/properties-grade/" + id.toString()));
+      "https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf/properties-grade/" +
+          id));
   if (response.statusCode == 200) {
     final jsonBody = jsonDecode(response.body);
-    Label label = Label.fromJson(jsonBody);
+    Label label = Label.fromJson(jsonBody['data']);
     return label;
   }
   throw Exception("Erreur lors de la récupération des labels.");
@@ -107,17 +106,24 @@ Future<Tuple2<List<Property>, List<Future<Property?>>>> getProperties(
 }
 
 class Label {
-  final int grade;
+  final double grade;
+  final String tag;
 
-  Label({required this.grade});
+  Label({
+    required this.grade,
+    required this.tag
+  });
 
   factory Label.fromJson(Map<String, dynamic> json) {
-    return Label(grade: json['grade']);
+    return Label(
+      grade: json['grade'],
+      tag: json['tag'],
+    );
   }
 }
 
 class Property {
-  final String? id;
+  final String id;
   final String? no_disposition;
   final String? date_mutation;
   final String? nature_mutation;
@@ -143,7 +149,7 @@ class Property {
   LatLng? pos;
 
   Property(
-      {this.id,
+      {required this.id,
       this.no_disposition,
       this.date_mutation,
       this.nature_mutation,
