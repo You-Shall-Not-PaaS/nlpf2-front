@@ -97,11 +97,10 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                                 children: [
                                   Row(
                                     children: [
-                                      Image.asset(
-                                        'position.png',
-                                        width: 30,
-                                        height: 30,
-                                        fit: BoxFit.contain,
+                                      const Icon(
+                                        Icons.room_outlined,
+                                        color: Colors.grey,
+                                        size: 30,
                                       ),
                                       const Padding(
                                           padding: EdgeInsets.symmetric(
@@ -114,11 +113,10 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                                           EdgeInsets.symmetric(vertical: 7.0)),
                                   Row(
                                     children: [
-                                      Image.asset(
-                                        'porte.png',
-                                        width: 30,
-                                        height: 30,
-                                        fit: BoxFit.contain,
+                                      const Icon(
+                                        Icons.home,
+                                        color: Colors.grey,
+                                        size: 30,
                                       ),
                                       const Padding(
                                           padding: EdgeInsets.symmetric(
@@ -139,11 +137,10 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                                           EdgeInsets.symmetric(vertical: 7.0)),
                                   Row(
                                     children: [
-                                      Image.asset(
-                                        'size.png',
-                                        width: 30,
-                                        height: 30,
-                                        fit: BoxFit.contain,
+                                      const Icon(
+                                        Icons.terrain_outlined,
+                                        color: Colors.grey,
+                                        size: 30,
                                       ),
                                       const Padding(
                                           padding: EdgeInsets.symmetric(
@@ -211,15 +208,15 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                           constraints: const BoxConstraints.expand(
                               width: 270.0, height: 100.0),
                           child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text("Bien: " +
+                                Text("Moyenne bien: " +
                                     (widget.property.valeur_fonciere /
                                             widget.property.surface_reelle_bati)
                                         .round()
                                         .toString() +
                                     " €/m²"),
-                                Text("Ville: " +
+                                Text("Moyenne ville: " +
                                     snapshottown.data!.average_price
                                         .toString() +
                                     " €/m²"),
@@ -249,10 +246,10 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                     style: ElevatedButton.styleFrom(
                       primary: Colors.blue[500],
                       textStyle: const TextStyle(
-                        fontSize: 30,
+                        fontSize: 15,
                       ),
                     ),
-                    child: const Text('Agence'),
+                    child: const Text('agences à proximité'),
                   ),
                 ),
               ]),
