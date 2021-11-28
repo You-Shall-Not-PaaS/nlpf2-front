@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:nlpf2/properties/filter.dart';
@@ -10,9 +11,8 @@ const backURL =
     'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';
 
 Future<Label> getLabels(String id) async {
-  final response = await http.get(Uri.parse(
-      "https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf/properties-grade/" +
-          id));
+  final response =
+      await http.get(Uri.parse(backURL + "/properties-grade/" + id));
   if (response.statusCode == 200) {
     final jsonBody = jsonDecode(response.body);
     Label label = Label.fromJson(jsonBody['data']);
@@ -21,13 +21,13 @@ Future<Label> getLabels(String id) async {
   throw Exception("Erreur lors de la récupération des labels.");
 }
 
-Future<int> getAverageTownPrice(String id) async {
+Future<TownSpec> getAverageTownPrice(String id) async {
   final response = await http.get(
       Uri.parse(backURL + "/properties/town/average-price/" + id.toString()));
-  //Uri.parse(backURL + "/properties/town/average-price/" + id.toString()));
   if (response.statusCode == 200) {
     final jsonBody = jsonDecode(response.body);
-    return jsonBody['average_price'];
+    TownSpec townSpec = TownSpec.fromJson(jsonBody['data']);
+    return townSpec;
   }
   throw Exception("Erreur lors de la récupération du prix moyen de la ville.");
 }
@@ -105,14 +105,23 @@ Future<Tuple2<List<Property>, List<Future<Property?>>>> getProperties(
   throw Exception("Erreur lors de la récupération des propriétés.");
 }
 
+class TownSpec {
+  final double? average_price;
+  final int? sample_size;
+
+  TownSpec({this.average_price, this.sample_size});
+
+  factory TownSpec.fromJson(Map<String, dynamic> json) {
+    return TownSpec(
+        average_price: json['average_price'], sample_size: json['sample_size']);
+  }
+}
+
 class Label {
   final double grade;
   final String tag;
 
-  Label({
-    required this.grade,
-    required this.tag
-  });
+  Label({required this.grade, required this.tag});
 
   factory Label.fromJson(Map<String, dynamic> json) {
     return Label(
