@@ -114,7 +114,7 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                                   Row(
                                     children: [
                                       const Icon(
-                                        Icons.home,
+                                        Icons.meeting_room,
                                         color: Colors.grey,
                                         size: 30,
                                       ),
@@ -138,7 +138,7 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                                   Row(
                                     children: [
                                       const Icon(
-                                        Icons.terrain_outlined,
+                                        Icons.zoom_out_map_rounded,
                                         color: Colors.grey,
                                         size: 30,
                                       ),
@@ -220,6 +220,9 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                                     snapshottown.data!.average_price
                                         .toString() +
                                     " €/m²"),
+                                const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 2.0)),
                                 Text(
                                   "Moyenne calculée sur " +
                                       snapshottown.data!.sample_size
@@ -249,7 +252,7 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                         fontSize: 15,
                       ),
                     ),
-                    child: const Text('agences à proximité'),
+                    child: const Text('Agences à proximité'),
                   ),
                 ),
               ]),
