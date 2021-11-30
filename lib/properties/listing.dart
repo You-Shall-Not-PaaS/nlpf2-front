@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nlpf2/properties/description.dart';
+import 'package:nlpf2/properties/similar_properties.dart';
 import 'package:nlpf2/service/service.dart';
 import 'package:tuple/tuple.dart';
 
@@ -33,13 +34,7 @@ class _ListingState extends State<Listing> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: InkWell(
-                            onTap: () => showDialog(
-                                  context: context,
-                                  builder: (BuildContext dialogContext) {
-                                    return DescriptionWidget(
-                                        property: property);
-                                  },
-                                ),
+                            onTap: () => openPropertyDialog(context, property),
                             // onTap: () => showDialog(context: context, builder: return MyAlertDialog(property: property)), // handle your onTap here
                             child: CustomListItem(property: property))),
                   //   child: CustomListItem(property: property))
@@ -143,4 +138,30 @@ selectTypeIcon(propertyType) {
     default:
       return Image.asset('autres.png');
   }
+}
+
+openPropertyDialog(context, property) {
+  var keyOne = GlobalKey<NavigatorState>();
+  var keyTwo = GlobalKey<NavigatorState>();
+  return showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return Column(children: [
+          Expanded(
+              child: Navigator(
+                  key: keyOne,
+                  onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                      builder: (context) => DescriptionWidget(
+                            property: property,
+                            similarKey: keyTwo,
+                          )))),
+          SizedBox(
+              height: 150,
+              child: Navigator(
+                  key: keyTwo,
+                  onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                      builder: (context) =>
+                          Similar(property: property, dialogKey: keyOne))))
+        ]);
+      });
 }

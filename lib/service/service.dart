@@ -10,6 +10,20 @@ const geoapifyKey = "ba7327de7fe34f90818b38e7da9b982e";
 const backURL =
     'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';
 
+Future<List<Property>> getSimilar(Property property) async {
+  final http.Response response = await http
+      .get(Uri.parse('$backURL/properties/similar/${property.id.toString()}'));
+  if (response.statusCode == 200) {
+    final jsonBody = jsonDecode(response.body);
+    List<Property> properties = [];
+    for (var property in jsonBody['data']) {
+      properties.add(Property.fromJson(property));
+    }
+    return properties;
+  }
+  throw Exception("Erreur lors de la récupération des biens similaires.");
+}
+
 Future<Label> getLabels(String id) async {
   final response =
       await http.get(Uri.parse(backURL + "/properties-grade/" + id));
@@ -182,6 +196,34 @@ class Property {
       this.nature_culture,
       this.surface_terrain,
       this.pos});
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'no_disposition': no_disposition,
+      'date_mutation': date_mutation,
+      'nature_mutation': nature_mutation,
+      'valeur_fonciere': valeur_fonciere,
+      'no_voie': no_voie,
+      'type_de_voie': type_de_voie,
+      'code_voie': code_voie,
+      'voie': voie,
+      'code_postal': code_postal,
+      'commune': commune,
+      'code_departement': code_departement,
+      'code_commune': code_commune,
+      'section': section,
+      'no_plan': no_plan,
+      'premier_lot': premier_lot,
+      'nombre_de_lots': nombre_de_lots,
+      'code_type_local': code_type_local,
+      'type_local': type_local,
+      'surface_reelle_bati': surface_reelle_bati,
+      'nombre_pieces_principales': nombre_pieces_principales,
+      'nature_culture': nature_culture,
+      'surface_terrain': surface_terrain,
+      'pos': pos
+    };
+  }
 
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
@@ -210,70 +252,68 @@ class Property {
         surface_terrain: json['Surface terrain']);
   }
 }
+
 /*
 List<Property> mock = [
   Property(
       commune: "PARIS",
-      no_voie: "3",
-      type_de_voie: "rue",
-      voie: "de l'eau",
       code_postal: "94682",
       type_local: "Maison",
-      code_voie: 42,
+      code_voie: "42",
       type_de_voie: "rue",
       voie: "de Cronstadt",
-      valeur_fonciere: "200000",
-      surface_reelle_bati: "250",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 200000,
+      surface_reelle_bati: 250,
+      nombre_pieces_principales: 5),
   Property(
       commune: "ASNIERES-SUR-SEINE",
       type_local: "Appartement",
       type_de_voie: "rue",
-      code_voie: 15,
+      code_voie: "15",
       voie: "albert 1er",
-      valeur_fonciere: "150000",
-      surface_reelle_bati: "50",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 150000,
+      surface_reelle_bati: 50,
+      nombre_pieces_principales: 5),
   Property(
       commune: "CRETEIL",
       type_local: "Maison",
       type_de_voie: "avenue",
-      code_voie: 42,
+      code_voie: "42",
       voie: "Magellan",
-      valeur_fonciere: "290000000",
-      surface_reelle_bati: "1500",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 290000000,
+      surface_reelle_bati: 1500,
+      nombre_pieces_principales: 5),
   Property(
       commune: "Paris",
       type_local: "Appartement",
       type_de_voie: "rue",
-      code_voie: 15,
+      code_voie: "15",
       voie: "Palestro",
-      valeur_fonciere: "45000",
-      surface_reelle_bati: "132",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 45000,
+      surface_reelle_bati: 132,
+      nombre_pieces_principales: 5),
   Property(
       commune: "LYON",
       type_local: "Appartement",
-      valeur_fonciere: "150000",
-      surface_reelle_bati: "50",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 150000,
+      surface_reelle_bati: 50,
+      nombre_pieces_principales: 5),
   Property(
       commune: "PERPIZOO",
       type_local: "Maison",
-      valeur_fonciere: "290000000",
-      surface_reelle_bati: "1500",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 290000000,
+      surface_reelle_bati: 1500,
+      nombre_pieces_principales: 5),
   Property(
       commune: "TOULOUSE",
       type_local: "Dépendance",
-      valeur_fonciere: "45000",
-      surface_reelle_bati: "132",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 45000,
+      surface_reelle_bati: 132,
+      nombre_pieces_principales: 5),
   Property(
       commune: "TOURCOING",
       type_local: "Autres",
-      valeur_fonciere: "5165",
-      surface_reelle_bati: "8",
-      nombre_pieces_principales: "5")
+      valeur_fonciere: 5165,
+      surface_reelle_bati: 8,
+      nombre_pieces_principales: 5)
 ];*/
