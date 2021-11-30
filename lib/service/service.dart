@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:nlpf2/properties/filter.dart';
@@ -9,26 +10,39 @@ const geoapifyKey = "ba7327de7fe34f90818b38e7da9b982e";
 const backURL =
     'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';
 
-Future<Label> getLabels(String id) async {
-  final response = await http.get(Uri.parse(
-      "https://us-central1-sylvan-harmony-307114.cloudfunctions.net/notebien/properties-grade/" +
-          id.toString()));
-  //await http.get(Uri.parse(backURL + "/properties-grade/" + id.toString()));
+Future<List<Property>> getSimilar(Property property) async {
+  final http.Response response = await http
+      .get(Uri.parse('$backURL/properties/similar/${property.id.toString()}'));
   if (response.statusCode == 200) {
     final jsonBody = jsonDecode(response.body);
-    Label label = Label.fromJson(jsonBody);
+    List<Property> properties = [];
+    for (var property in jsonBody['data']) {
+      properties.add(Property.fromJson(property));
+    }
+    getLocations(properties);
+    return properties;
+  }
+  throw Exception("Erreur lors de la récupération des biens similaires.");
+}
+
+Future<Label> getLabels(String id) async {
+  final response =
+      await http.get(Uri.parse(backURL + "/properties-grade/" + id));
+  if (response.statusCode == 200) {
+    final jsonBody = jsonDecode(response.body);
+    Label label = Label.fromJson(jsonBody['data']);
     return label;
   }
   throw Exception("Erreur lors de la récupération des labels.");
 }
 
-Future<int> getAverageTownPrice(String id) async {
+Future<TownSpec> getAverageTownPrice(String id) async {
   final response = await http.get(
       Uri.parse(backURL + "/properties/town/average-price/" + id.toString()));
-  //Uri.parse(backURL + "/properties/town/average-price/" + id.toString()));
   if (response.statusCode == 200) {
     final jsonBody = jsonDecode(response.body);
-    return jsonBody['average_price'];
+    TownSpec townSpec = TownSpec.fromJson(jsonBody['data']);
+    return townSpec;
   }
   throw Exception("Erreur lors de la récupération du prix moyen de la ville.");
 }
@@ -36,7 +50,7 @@ Future<int> getAverageTownPrice(String id) async {
 String createFilterUri(int page, Filters filters) {
   String filterString = '?';
   if (filters.cities.isNotEmpty) {
-    filterString += "&commune=";
+    filterString += "&cities=";
     for (var city in filters.cities) {
       filterString += city as String;
       if (city != filters.cities.last) {
@@ -106,18 +120,34 @@ Future<Tuple2<List<Property>, List<Future<Property?>>>> getProperties(
   throw Exception("Erreur lors de la récupération des propriétés.");
 }
 
-class Label {
-  final int grade;
+class TownSpec {
+  final double? average_price;
+  final int? sample_size;
 
-  Label({required this.grade});
+  TownSpec({this.average_price, this.sample_size});
+
+  factory TownSpec.fromJson(Map<String, dynamic> json) {
+    return TownSpec(
+        average_price: json['average_price'], sample_size: json['sample_size']);
+  }
+}
+
+class Label {
+  final String grade;
+  final String tag;
+
+  Label({required this.grade, required this.tag});
 
   factory Label.fromJson(Map<String, dynamic> json) {
-    return Label(grade: json['grade']);
+    return Label(
+      grade: json['grade'],
+      tag: json['tag'],
+    );
   }
 }
 
 class Property {
-  final String? id;
+  final String id;
   final String? no_disposition;
   final String? date_mutation;
   final String? nature_mutation;
@@ -143,7 +173,7 @@ class Property {
   LatLng? pos;
 
   Property(
-      {this.id,
+      {required this.id,
       this.no_disposition,
       this.date_mutation,
       this.nature_mutation,
@@ -167,6 +197,34 @@ class Property {
       this.nature_culture,
       this.surface_terrain,
       this.pos});
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'no_disposition': no_disposition,
+      'date_mutation': date_mutation,
+      'nature_mutation': nature_mutation,
+      'valeur_fonciere': valeur_fonciere,
+      'no_voie': no_voie,
+      'type_de_voie': type_de_voie,
+      'code_voie': code_voie,
+      'voie': voie,
+      'code_postal': code_postal,
+      'commune': commune,
+      'code_departement': code_departement,
+      'code_commune': code_commune,
+      'section': section,
+      'no_plan': no_plan,
+      'premier_lot': premier_lot,
+      'nombre_de_lots': nombre_de_lots,
+      'code_type_local': code_type_local,
+      'type_local': type_local,
+      'surface_reelle_bati': surface_reelle_bati,
+      'nombre_pieces_principales': nombre_pieces_principales,
+      'nature_culture': nature_culture,
+      'surface_terrain': surface_terrain,
+      'pos': pos
+    };
+  }
 
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
@@ -195,70 +253,68 @@ class Property {
         surface_terrain: json['Surface terrain']);
   }
 }
+
 /*
 List<Property> mock = [
   Property(
       commune: "PARIS",
-      no_voie: "3",
-      type_de_voie: "rue",
-      voie: "de l'eau",
       code_postal: "94682",
       type_local: "Maison",
-      code_voie: 42,
+      code_voie: "42",
       type_de_voie: "rue",
       voie: "de Cronstadt",
-      valeur_fonciere: "200000",
-      surface_reelle_bati: "250",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 200000,
+      surface_reelle_bati: 250,
+      nombre_pieces_principales: 5),
   Property(
       commune: "ASNIERES-SUR-SEINE",
       type_local: "Appartement",
       type_de_voie: "rue",
-      code_voie: 15,
+      code_voie: "15",
       voie: "albert 1er",
-      valeur_fonciere: "150000",
-      surface_reelle_bati: "50",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 150000,
+      surface_reelle_bati: 50,
+      nombre_pieces_principales: 5),
   Property(
       commune: "CRETEIL",
       type_local: "Maison",
       type_de_voie: "avenue",
-      code_voie: 42,
+      code_voie: "42",
       voie: "Magellan",
-      valeur_fonciere: "290000000",
-      surface_reelle_bati: "1500",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 290000000,
+      surface_reelle_bati: 1500,
+      nombre_pieces_principales: 5),
   Property(
       commune: "Paris",
       type_local: "Appartement",
       type_de_voie: "rue",
-      code_voie: 15,
+      code_voie: "15",
       voie: "Palestro",
-      valeur_fonciere: "45000",
-      surface_reelle_bati: "132",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 45000,
+      surface_reelle_bati: 132,
+      nombre_pieces_principales: 5),
   Property(
       commune: "LYON",
       type_local: "Appartement",
-      valeur_fonciere: "150000",
-      surface_reelle_bati: "50",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 150000,
+      surface_reelle_bati: 50,
+      nombre_pieces_principales: 5),
   Property(
       commune: "PERPIZOO",
       type_local: "Maison",
-      valeur_fonciere: "290000000",
-      surface_reelle_bati: "1500",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 290000000,
+      surface_reelle_bati: 1500,
+      nombre_pieces_principales: 5),
   Property(
       commune: "TOULOUSE",
       type_local: "Dépendance",
-      valeur_fonciere: "45000",
-      surface_reelle_bati: "132",
-      nombre_pieces_principales: "5"),
+      valeur_fonciere: 45000,
+      surface_reelle_bati: 132,
+      nombre_pieces_principales: 5),
   Property(
       commune: "TOURCOING",
       type_local: "Autres",
-      valeur_fonciere: "5165",
-      surface_reelle_bati: "8",
-      nombre_pieces_principales: "5")
+      valeur_fonciere: 5165,
+      surface_reelle_bati: 8,
+      nombre_pieces_principales: 5)
 ];*/

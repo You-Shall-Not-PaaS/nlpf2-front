@@ -31,6 +31,7 @@ dependencies:
   http: 0.13.4
   multi_select_flutter: 4.0.0
   flutter_map: any
+  html: any
   latlng: any
   flutter:
     sdk: flutter

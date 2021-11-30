@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nlpf2/properties/map.dart';
-import 'package:nlpf2/properties/properties.dart';
+import 'package:nlpf2/properties/description.dart';
+import 'package:nlpf2/properties/similar_properties.dart';
 import 'package:nlpf2/service/service.dart';
 import 'package:tuple/tuple.dart';
 
@@ -15,26 +15,30 @@ class Listing extends StatefulWidget {
 class _ListingState extends State<Listing> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        padding: const EdgeInsets.all(8.0),
-        itemExtent: 106.0,
-        children: [
-          for (var property in widget.properties.item1)
-            Container(
-                decoration: const BoxDecoration(
-                    border: Border.symmetric(
-                        horizontal: BorderSide(color: Colors.blueGrey))),
-                child: InkWell(
-                    onTap: () => showDialog(
-                          context: context,
-                          builder: (BuildContext dialogContext) {
-                            return DescriptionWidget(property: property);
-                          },
+    return Center(
+        child: FractionallySizedBox(
+            widthFactor: 0.84,
+            child: ListView(
+                padding: const EdgeInsets.all(8.0),
+                itemExtent: 180.0,
+                children: [
+                  for (var property in widget.properties.item1)
+                    Container(
+                        margin:
+                            const EdgeInsets.only(bottom: 20.0, right: 10.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 3,
+                            color: Colors.blueGrey,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                    // onTap: () => showDialog(context: context, builder: return MyAlertDialog(property: property)), // handle your onTap here
-                    child: CustomListItem(property: property))),
-          //   child: CustomListItem(property: property))
-        ]);
+                        child: InkWell(
+                            onTap: () => openPropertyDialog(context, property),
+                            // onTap: () => showDialog(context: context, builder: return MyAlertDialog(property: property)), // handle your onTap here
+                            child: CustomListItem(property: property))),
+                  //   child: CustomListItem(property: property))
+                ])));
   }
 }
 
@@ -50,17 +54,73 @@ class CustomListItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Expanded(flex: 2, child: selectTypeIcon(property.type_local)),
+          Expanded(flex: 3, child: selectTypeIcon(property.type_local)),
+          const Padding(padding: EdgeInsets.symmetric(horizontal: 30.0)),
           Expanded(
-            flex: 3,
-            child: _PropertyDetails(
-              property: property,
-            ),
+            flex: 2,
+            child: Center(
+                child: Row(children: [
+              Icon(
+                Icons.maps_home_work_rounded,
+                color: Colors.blue[200],
+                size: 30.0,
+              ),
+              const Padding(padding: EdgeInsets.symmetric(horizontal: 10.0)),
+              Text(
+                property.type_local ==
+                        "Local industriel. commercial ou assimilé"
+                    ? "Local"
+                    : property.type_local,
+                style: const TextStyle(fontSize: 18.0),
+              )
+            ])),
           ),
-          const Icon(
-            Icons.more_vert,
-            size: 16.0,
+          Expanded(
+            flex: 2,
+            child: Center(
+                child: Row(children: [
+              Icon(
+                Icons.local_offer,
+                color: Colors.yellow[700],
+                size: 30.0,
+              ),
+              const Padding(padding: EdgeInsets.symmetric(horizontal: 10.0)),
+              Text(
+                '${property.valeur_fonciere} €',
+                style: const TextStyle(fontSize: 18.0),
+              )
+            ])),
           ),
+          Expanded(
+              flex: 2,
+              child: Center(
+                  child: Row(children: [
+                Icon(
+                  Icons.zoom_out_map_rounded,
+                  color: Colors.green[200],
+                  size: 30.0,
+                ),
+                const Padding(padding: EdgeInsets.symmetric(horizontal: 10.0)),
+                Text(
+                  '${property.surface_reelle_bati} m²',
+                  style: const TextStyle(fontSize: 18.0),
+                )
+              ]))),
+          Expanded(
+              flex: 4,
+              child: Center(
+                  child: Row(children: [
+                Icon(
+                  Icons.pin_drop_rounded,
+                  color: Colors.red[400],
+                  size: 30.0,
+                ),
+                const Padding(padding: EdgeInsets.symmetric(horizontal: 10.0)),
+                Text(
+                  property.commune,
+                  style: const TextStyle(fontSize: 18.0),
+                )
+              ]))),
         ],
       ),
     );
@@ -80,143 +140,28 @@ selectTypeIcon(propertyType) {
   }
 }
 
-class DescriptionWidget extends StatelessWidget {
-  const DescriptionWidget({Key? key, required this.property}) : super(key: key);
-
-  final Property property;
-  //final Future<Label> label = FutureBuilder(builder: builder)   getLabels(this.property.id.toString());
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      content: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+openPropertyDialog(context, property) {
+  var keyOne = GlobalKey<NavigatorState>();
+  var keyTwo = GlobalKey<NavigatorState>();
+  return showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return Column(children: [
           Expanded(
-            flex: 0,
-            child: FittedBox(
-              fit: BoxFit.none, // otherwise the logo will be tiny
-              child: selectTypeIcon(property.type_local),
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(left: 30.0)),
-          Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  property.type_local,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 48,
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
-                Text("Valeur foncière: " +
-                    property.valeur_fonciere.toString() +
-                    " €"),
-                if (property.surface_terrain != null)
-                  const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-                if (property.surface_terrain != null)
-                  Text("Surface terrain: " +
-                      property.surface_terrain.toString() +
-                      " m²"),
-                const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-                Text("Surface habitable: " +
-                    property.surface_reelle_bati.toString() +
-                    " m²"),
-                const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-                Text("Nombre de pièces: " +
-                    property.nombre_pieces_principales.toString()),
-                const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-                formatAdress(),
-                const Padding(padding: EdgeInsets.symmetric(vertical: 15.0)),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.orange,
-                    border: Border.all(
-                      width: 5,
-                      color: Colors.orange,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: Text('Labels:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 36,
-                        color: Colors.blue[700]!,
-                      )),
-                ),
-              ]),
-        ],
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Close'),
-        ),
-      ],
-    );
-  }
-
-  formatAdress() {
-    String res = "";
-    if (property.no_voie != null) {
-      res += property.no_voie.toString() + " ";
-    }
-    if (property.type_de_voie != null) {
-      res += property.type_de_voie.toString() + " ";
-    }
-    if (property.voie != null) {
-      res += property.voie.toString() + ", ";
-    }
-    if (property.code_postal != null) {
-      res += property.code_postal.toString() + " ";
-    }
-    res += property.commune;
-    return Text("Adresse: " + res);
-  }
-}
-
-class _PropertyDetails extends StatelessWidget {
-  const _PropertyDetails({Key? key, required this.property}) : super(key: key);
-
-  final Property property;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            property.type_local,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14.0,
-            ),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-          Text(
-            property.commune,
-            style: const TextStyle(fontSize: 10.0),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text(
-            '${property.valeur_fonciere} €',
-            style: const TextStyle(fontSize: 10.0),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text(
-            '${property.surface_reelle_bati} m²',
-            style: const TextStyle(fontSize: 10.0),
-          )
-        ],
-      ),
-    );
-  }
+              child: Navigator(
+                  key: keyOne,
+                  onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                      builder: (context) => DescriptionWidget(
+                            property: property,
+                            similarKey: keyTwo,
+                          )))),
+          SizedBox(
+              height: 150,
+              child: Navigator(
+                  key: keyTwo,
+                  onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                      builder: (context) =>
+                          Similar(property: property, dialogKey: keyOne))))
+        ]);
+      });
 }
