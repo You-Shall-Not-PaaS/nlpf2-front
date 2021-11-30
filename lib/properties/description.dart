@@ -210,20 +210,23 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text("Moyenne bien: " +
-                                    (widget.property.valeur_fonciere /
+                                if (widget.property.surface_reelle_bati != 0)
+                                  Text("Moyenne bien: " +
+                                      (widget.property.valeur_fonciere /
                                             widget.property.surface_reelle_bati)
                                         .round()
                                         .toString() +
                                     " €/m²"),
-                                Text("Moyenne ville: " +
+                                if (snapshottown.data!.average_price != null)
+                                  Text("Moyenne ville: " +
                                     snapshottown.data!.average_price
                                         .toString() +
                                     " €/m²"),
-                                const Padding(
+                                  const Padding(
                                     padding:
                                         EdgeInsets.symmetric(vertical: 2.0)),
-                                Text(
+                                if (widget.property.surface_reelle_bati != 0 && snapshottown.data!.average_price != null)
+                                  Text(
                                   "Moyenne calculée sur " +
                                       snapshottown.data!.sample_size
                                           .toString() +
