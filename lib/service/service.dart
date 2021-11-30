@@ -118,7 +118,7 @@ class TownSpec {
 }
 
 class Label {
-  final double grade;
+  final String grade;
   final String tag;
 
   Label({required this.grade, required this.tag});
