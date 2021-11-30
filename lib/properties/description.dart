@@ -213,28 +213,30 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                                 if (widget.property.surface_reelle_bati != 0)
                                   Text("Moyenne bien: " +
                                       (widget.property.valeur_fonciere /
-                                            widget.property.surface_reelle_bati)
-                                        .round()
-                                        .toString() +
-                                    " €/m²"),
+                                              widget
+                                                  .property.surface_reelle_bati)
+                                          .round()
+                                          .toString() +
+                                      " €/m²"),
                                 if (snapshottown.data!.average_price != null)
                                   Text("Moyenne ville: " +
-                                    snapshottown.data!.average_price
-                                        .toString() +
-                                    " €/m²"),
-                                  const Padding(
+                                      snapshottown.data!.average_price
+                                          .toString() +
+                                      " €/m²"),
+                                const Padding(
                                     padding:
                                         EdgeInsets.symmetric(vertical: 2.0)),
-                                if (widget.property.surface_reelle_bati != 0 && snapshottown.data!.average_price != null)
+                                if (widget.property.surface_reelle_bati != 0 &&
+                                    snapshottown.data!.average_price != null)
                                   Text(
-                                  "Moyenne calculée sur " +
-                                      snapshottown.data!.sample_size
-                                          .toString() +
-                                      " propriétés",
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                  ),
-                                )
+                                    "Moyenne calculée sur " +
+                                        snapshottown.data!.sample_size
+                                            .toString() +
+                                        " propriétés",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                    ),
+                                  )
                               ]));
                     } else if (snapshottown.hasError) {
                       return Text('${snapshottown.error}');
@@ -293,7 +295,6 @@ class _DescriptionWidget extends State<DescriptionWidget> {
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           );
         }
-        break;
       case "Ok":
         {
           return BoxDecoration(
@@ -305,7 +306,6 @@ class _DescriptionWidget extends State<DescriptionWidget> {
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           );
         }
-        break;
       case "Mauvais":
         {
           return BoxDecoration(
@@ -317,7 +317,6 @@ class _DescriptionWidget extends State<DescriptionWidget> {
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           );
         }
-        break;
       case "Neutre":
         {
           return BoxDecoration(
@@ -329,7 +328,6 @@ class _DescriptionWidget extends State<DescriptionWidget> {
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           );
         }
-        break;
     }
   }
 
