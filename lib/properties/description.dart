@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nlpf2/properties/similar_properties.dart';
+import 'dart:html' as html;
 import 'package:nlpf2/service/service.dart';
 import 'package:tuple/tuple.dart';
 
@@ -37,12 +37,12 @@ class _DescriptionWidget extends State<DescriptionWidget> {
             CloseButton(
                 color: const Color(0xFFD5D3D3),
                 onPressed: () {
-              if (widget.similarKey.currentContext != null) {
-                Navigator.of(widget.similarKey.currentContext!,
-                        rootNavigator: true)
-                    .pop();
-              }
-              Navigator.pop(context);
+                  if (widget.similarKey.currentContext != null) {
+                    Navigator.of(widget.similarKey.currentContext!,
+                            rootNavigator: true)
+                        .pop();
+                  }
+                  Navigator.pop(context);
                 })
           ]),
       titlePadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
@@ -255,20 +255,19 @@ class _DescriptionWidget extends State<DescriptionWidget> {
                   },
                 ),
                 Container(
-                  alignment: Alignment.bottomRight,
-                  constraints:
-                      const BoxConstraints.expand(width: 240.0, height: 100.0),
-                  child: ElevatedButton(
-                    onPressed: _lookForAgence,
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue[500],
-                      textStyle: const TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                    child: const Text('Agences à proximité'),
-                  ),
-                ),
+                    alignment: Alignment.bottomRight,
+                    constraints: const BoxConstraints.expand(
+                        width: 240.0, height: 100.0),
+                    child: ElevatedButton(
+                        onPressed: _lookForAgence,
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.blue[500],
+                          textStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                        ),
+                        child: const Text('Agences à proximité'))),
               ]),
             ]);
           } else if (snapshot.hasError) {
@@ -281,7 +280,11 @@ class _DescriptionWidget extends State<DescriptionWidget> {
     );
   }
 
-  void _lookForAgence() async {}
+  void _lookForAgence() async {
+    html.window.open(
+        'https://www.google.com/maps/search/agences+immobilières/@${widget.property.pos!.latitude},${widget.property.pos!.longitude},14z',
+        'new tab');
+  }
 
   String typeLocal(String type) {
     if (type == "Local industriel. commercial ou assimilé") {
