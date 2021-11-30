@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:nlpf2/properties/description.dart';
+import 'package:nlpf2/properties/listing.dart';
 import 'package:nlpf2/service/service.dart';
 import 'package:tuple/tuple.dart';
 
@@ -56,12 +56,7 @@ class PropertyMapState extends State<PropertyMap> {
                 height: 80.0,
                 point: property.pos ?? LatLng(0, 0),
                 builder: (ctx) => InkWell(
-                    onTap: () => showDialog(
-                          context: context,
-                          builder: (BuildContext dialogContext) {
-                            return DescriptionWidget(property: property);
-                          },
-                        ),
+                    onTap: () => openPropertyDialog(context, property),
                     child: Tooltip(
                         padding: const EdgeInsets.all(10),
                         textStyle:
