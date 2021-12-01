@@ -32,6 +32,7 @@ dependencies:
   multi_select_flutter: 4.0.0
   dropdown_search: any
   flutter_map: any
+  html: any
   latlng: any
   flutter:
     sdk: flutter

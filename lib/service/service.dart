@@ -35,6 +35,7 @@ Future<List<Property>> getSimilar(Property property) async {
     for (var property in jsonBody['data']) {
       properties.add(Property.fromJson(property));
     }
+    getLocations(properties);
     return properties;
   }
   throw Exception("Erreur lors de la récupération des biens similaires.");
