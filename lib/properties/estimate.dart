@@ -256,9 +256,12 @@ class _PriceWidget extends State<PriceWidget> {
               Text("Prix éstimé: " + price + " €"),
               const Padding(padding: EdgeInsets.symmetric(vertical: 7)),
               Text("Prix au m²: " + pricem + " €/m²"),
-              const Padding(padding: EdgeInsets.symmetric(vertical: 7)),
+              const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 9, horizontal: 5)),
               Text(
-                "Calculé avec: " + size.toString() + " données",
+                "Cette estimation est calculée par rapport à " +
+                    size.toString() +
+                    " biens similaire vendu durant l'années passer. Elle prend aussi en compte l'inflation.",
                 style: const TextStyle(
                   fontSize: 11,
                 ),
