@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nlpf2/home.dart';
 import 'package:nlpf2/navbar.dart';
+import 'package:nlpf2/properties/estimate.dart';
 import 'package:nlpf2/properties/properties.dart';
 
 void main() {
@@ -13,10 +14,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'NLPF',
-        initialRoute: '/',
+        initialRoute: '/listing',
         routes: {
-          '/': (context) => const Navbar(child: Home()),
-          '/listing': (context) => const Navbar(child: Properties())
+          // '/': (context) => const Navbar(child: Home()),
+          '/listing': (context) => const Navbar(child: Properties()),
+          '/Estimation': (context) => const Navbar(child: Estimation())
         },
         theme: ThemeData(
           primaryColor: Colors.blue,

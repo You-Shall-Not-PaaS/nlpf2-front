@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nlpf2/properties/similar_properties.dart';
 import 'package:nlpf2/service/service.dart';
 import 'package:tuple/tuple.dart';
 
@@ -37,12 +36,12 @@ class _DescriptionWidget extends State<DescriptionWidget> {
             CloseButton(
                 color: const Color(0xFFD5D3D3),
                 onPressed: () {
-              if (widget.similarKey.currentContext != null) {
-                Navigator.of(widget.similarKey.currentContext!,
-                        rootNavigator: true)
-                    .pop();
-              }
-              Navigator.pop(context);
+                  if (widget.similarKey.currentContext != null) {
+                    Navigator.of(widget.similarKey.currentContext!,
+                            rootNavigator: true)
+                        .pop();
+                  }
+                  Navigator.pop(context);
                 })
           ]),
       titlePadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
