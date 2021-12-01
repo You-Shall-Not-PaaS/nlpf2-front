@@ -1,7 +1,8 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
+import 'dart:html';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
+import 'package:nlpf2/properties/estimate.dart';
 import 'package:nlpf2/properties/filter.dart';
 import 'package:tuple/tuple.dart';
 
@@ -9,6 +10,21 @@ const geoapifyKey = "ba7327de7fe34f90818b38e7da9b982e";
 
 const backURL =
     'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';
+
+Future<EstimatePrice> getEstimatePrice(PropertyForm form) async {
+  String type = "Maison";
+  if (form.appartement) {
+    type = "Appartement";
+  }
+  final http.Response response = await http.get(Uri.parse(
+      '$backURL/properties/estimation/${form.city}/$type/${form.surface}/${form.room}/${form.garden}'));
+  if (response.statusCode == 200) {
+    final jsonBody = jsonDecode(response.body);
+    EstimatePrice estimatePrice = EstimatePrice.fromJson(jsonBody['data']);
+    return estimatePrice;
+  }
+  throw Exception("Erreur lors de la récupération des biens similaires.");
+}
 
 Future<List<Property>> getSimilar(Property property) async {
   final http.Response response = await http
@@ -118,6 +134,22 @@ Future<Tuple2<List<Property>, List<Future<Property?>>>> getProperties(
     return Tuple2(properties, locations);
   }
   throw Exception("Erreur lors de la récupération des propriétés.");
+}
+
+class EstimatePrice {
+  final String price;
+  final String price_m;
+  final int sample_size;
+
+  EstimatePrice(
+      {required this.price, required this.price_m, required this.sample_size});
+
+  factory EstimatePrice.fromJson(Map<String, dynamic> json) {
+    return EstimatePrice(
+        price: json['price'],
+        price_m: json['price/m2'],
+        sample_size: json['sample_size']);
+  }
 }
 
 class TownSpec {

@@ -30,6 +30,7 @@ dependencies:
   tuple: 2.0.0
   http: 0.13.4
   multi_select_flutter: 4.0.0
+  dropdown_search: any
   flutter_map: any
   html: any
   latlng: any
