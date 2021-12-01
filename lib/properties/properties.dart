@@ -48,13 +48,13 @@ class _PropertiesState extends State<Properties> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      const SizedBox(height: 50), //padding
+      const SizedBox(height: 20), //padding
       IntrinsicHeight(
           child: Navigator(
               key: keyOne,
               onGenerateRoute: (routeSettings) => MaterialPageRoute(
                   builder: (context) => FilterWidget(setFilters: setFilters)))),
-      const SizedBox(height: 70), //padding
+      const SizedBox(height: 20), //padding
       Expanded(
           child: Navigator(
               key: keyTwo,

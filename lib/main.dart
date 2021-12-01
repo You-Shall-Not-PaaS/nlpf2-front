@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'NLPF',
+        title: 'BenchIMMO',
         initialRoute: '/listing',
         routes: {
           // '/': (context) => const Navbar(child: Home()),

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:nlpf2/properties/description.dart';
 import 'package:nlpf2/service/cities.dart';
 import 'package:nlpf2/service/service.dart';
 
@@ -163,7 +162,7 @@ class _Estimation extends State<Estimation> {
                     );
                   }
                 },
-                child: const Text('Submit'),
+                child: const Text('Estimer'),
               ),
             ],
           ),
@@ -261,7 +260,7 @@ class _PriceWidget extends State<PriceWidget> {
               Text(
                 "Cette estimation est calculée par rapport à " +
                     size.toString() +
-                    " biens similaire vendu durant l'années passer. Elle prend aussi en compte l'inflation.",
+                    " biens similaires vendus durant l'année passée. L'inflation est également prise en compte",
                 style: const TextStyle(
                   fontSize: 11,
                 ),

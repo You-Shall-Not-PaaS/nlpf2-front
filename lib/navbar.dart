@@ -9,7 +9,7 @@ class Navbar extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
-          title: const Text('NLPF'),
+          title: const Text('BenchIMMO'),
           actions: <Widget>[
             // TextButton(
             //   style: TextButton.styleFrom(
@@ -29,7 +29,7 @@ class Navbar extends StatelessWidget {
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/listing');
               },
-              child: const Text('Listing'),
+              child: const Text('Propriétés'),
             ),
             TextButton(
               style: TextButton.styleFrom(
