@@ -6,7 +6,7 @@ import 'package:nlpf2/properties/estimate.dart';
 import 'package:nlpf2/properties/filter.dart';
 import 'package:tuple/tuple.dart';
 
-const geoapifyKey = "ba7327de7fe34f90818b38e7da9b982e";
+const geoapifyKey = "9115835f5042473ca6063cfeb06bbd46";
 
 const backURL =
     'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';
