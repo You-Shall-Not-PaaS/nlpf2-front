@@ -11,16 +11,16 @@ class Navbar extends StatelessWidget {
           foregroundColor: Colors.white,
           title: const Text('NLPF'),
           actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-                textStyle: const TextStyle(fontSize: 20),
-              ),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/');
-              },
-              child: const Text('Home'),
-            ),
+            // TextButton(
+            //   style: TextButton.styleFrom(
+            //     primary: Colors.white,
+            //     textStyle: const TextStyle(fontSize: 20),
+            //   ),
+            //   onPressed: () {
+            //     Navigator.pushReplacementNamed(context, '/');
+            //   },
+            //   child: const Text('Home'),
+            // ),
             TextButton(
               style: TextButton.styleFrom(
                 primary: Colors.white,
@@ -30,6 +30,16 @@ class Navbar extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, '/listing');
               },
               child: const Text('Listing'),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/Estimation');
+              },
+              child: const Text('Estimation'),
             )
           ],
         ),
