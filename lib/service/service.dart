@@ -5,11 +5,14 @@ import 'package:latlong2/latlong.dart';
 import 'package:nlpf2/properties/estimate.dart';
 import 'package:nlpf2/properties/filter.dart';
 import 'package:tuple/tuple.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 const geoapifyKey = "9115835f5042473ca6063cfeb06bbd46";
 
-const backURL =
-    'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';
+/*const backURL =
+    'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';*/
+
+String? backURL = dotenv.env['URL'];
 
 Future<EstimatePrice> getEstimatePrice(PropertyForm form) async {
   String type = "Maison";
@@ -43,7 +46,7 @@ Future<List<Property>> getSimilar(Property property) async {
 
 Future<Label> getLabels(String id) async {
   final response =
-      await http.get(Uri.parse(backURL + "/properties-grade/" + id));
+      await http.get(Uri.parse(backURL! + "/properties-grade/" + id));
   if (response.statusCode == 200) {
     final jsonBody = jsonDecode(response.body);
     Label label = Label.fromJson(jsonBody['data']);
@@ -54,7 +57,7 @@ Future<Label> getLabels(String id) async {
 
 Future<TownSpec> getAverageTownPrice(String id) async {
   final response = await http.get(
-      Uri.parse(backURL + "/properties/town/average-price/" + id.toString()));
+      Uri.parse(backURL! + "/properties/town/average-price/" + id.toString()));
   if (response.statusCode == 200) {
     final jsonBody = jsonDecode(response.body);
     TownSpec townSpec = TownSpec.fromJson(jsonBody['data']);
@@ -93,10 +96,10 @@ String createFilterUri(int page, Filters filters) {
     filterString += "&maxSize=" + filters.surfaceMax.toString();
   }
   if (filterString != "?") {
-    return backURL + '/properties-filter/' + page.toString() + filterString;
+    return backURL! + '/properties-filter/' + page.toString() + filterString;
   }
 
-  return backURL + '/properties/' + page.toString();
+  return backURL! + '/properties/' + page.toString();
 }
 
 List<Future<Property?>> getLocations(List<Property> properties) {
