@@ -4,7 +4,8 @@ import 'package:nlpf2/navbar.dart';
 import 'package:nlpf2/properties/estimate.dart';
 import 'package:nlpf2/properties/properties.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 

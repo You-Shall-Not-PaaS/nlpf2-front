@@ -8,8 +8,7 @@ import 'package:tuple/tuple.dart';
 
 const geoapifyKey = "9115835f5042473ca6063cfeb06bbd46";
 
-const backURL =
-    'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';
+const backURL = dotenv.env['BACK_URL'];
 
 Future<EstimatePrice> getEstimatePrice(PropertyForm form) async {
   String type = "Maison";
