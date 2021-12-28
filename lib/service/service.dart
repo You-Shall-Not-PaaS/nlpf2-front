@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:nlpf2/properties/estimate.dart';
 import 'package:nlpf2/properties/filter.dart';
 import 'package:tuple/tuple.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 const geoapifyKey = "9115835f5042473ca6063cfeb06bbd46";
 
