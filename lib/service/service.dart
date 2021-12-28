@@ -9,7 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 const geoapifyKey = "9115835f5042473ca6063cfeb06bbd46";
 
-String? backURL = dotenv.env['BACK_URL'];
+String backURL = dotenv.get('BACK_URL', fallback: 'BACK_URL not found'),;
 
 Future<EstimatePrice> getEstimatePrice(PropertyForm form) async {
   String type = "Maison";
