@@ -16,6 +16,7 @@ WORKDIR /usr/local/bin/app
 RUN echo "BACK_URL=$BACK_URL" > .env
 RUN flutter pub get
 RUN flutter build web
+RUN ["chmod", "+x", "/usr/local/bin/app/server/server.sh"]
 
 # Document the exposed port and start serser
 EXPOSE 8080
