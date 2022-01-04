@@ -36,6 +36,7 @@ Future<List<Property>> getSimilar(Property property) async {
     final jsonBody = jsonDecode(response.body);
     List<Property> properties = [];
     for (var property in jsonBody['data']) {
+      print(property);
       properties.add(Property.fromJson(property));
     }
     getLocations(properties);
@@ -131,6 +132,7 @@ Future<Tuple2<List<Property>, List<Future<Property?>>>> getProperties(
     final jsonBody = jsonDecode(response.body);
     List<Property> properties = [];
     for (var property in jsonBody['data']) {
+       print(property);
       properties.add(Property.fromJson(property));
     }
     final List<Future<Property?>> locations = getLocations(properties);
@@ -197,7 +199,6 @@ class Property {
   final int? code_commune;
   final String? section;
   final int? no_plan;
-  final int? premier_lot;
   final int? nombre_de_lots;
   final String? code_type_local;
   final String type_local;
@@ -223,7 +224,6 @@ class Property {
       this.code_commune,
       this.section,
       this.no_plan,
-      this.premier_lot,
       this.nombre_de_lots,
       this.code_type_local,
       required this.type_local,
@@ -249,7 +249,6 @@ class Property {
       'code_commune': code_commune,
       'section': section,
       'no_plan': no_plan,
-      'premier_lot': premier_lot,
       'nombre_de_lots': nombre_de_lots,
       'code_type_local': code_type_local,
       'type_local': type_local,
@@ -263,29 +262,28 @@ class Property {
 
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
-        id: json['id'],
-        no_disposition: json['No disposition'],
-        date_mutation: json['Date mutation'],
-        nature_mutation: json['Nature mutation'],
-        valeur_fonciere: json['Valeur fonciere'],
-        no_voie: json['No voie'],
-        type_de_voie: json['Type de voie'],
-        code_voie: json['Code voie'],
-        voie: json['Voie'],
-        code_postal: json['Code postal'],
-        commune: json['Commune'],
-        code_departement: json['Code departement'],
-        code_commune: json['Code commune'],
-        section: json['Section'],
-        no_plan: json['No plan'],
-        premier_lot: json['1er lot'],
-        nombre_de_lots: json['Nombre de lots'],
-        code_type_local: json['Code type local'],
-        type_local: json['Type local'],
-        surface_reelle_bati: json['Surface reelle bati'],
-        nombre_pieces_principales: json['Nombre pieces principales'],
-        nature_culture: json['Nature culture'],
-        surface_terrain: json['Surface terrain']);
+        id: json['id'].toString(),
+        no_disposition: json['no_disposition'],
+        date_mutation: json['date_mutation'],
+        nature_mutation: json['nature_mutation'],
+        valeur_fonciere: json['valeur_fonciere'],
+        no_voie: json['no_voie'],
+        type_de_voie: json['type_de_voie'],
+        code_voie: json['code_voie'],
+        voie: json['voie'],
+        code_postal: json['code_postal'],
+        commune: json['commune'],
+        code_departement: int.parse(json['code_departement']),
+        code_commune: int.parse(json['code_commune']),
+        section: json['section'],
+        no_plan: int.parse(json['no_plan']),
+        nombre_de_lots: int.parse(json['nombre_de_lots']),
+        code_type_local: json['code_type_local'],
+        type_local: json['type_local'],
+        surface_reelle_bati: json['surface_reelle_bati'],
+        nombre_pieces_principales: json['nombre_pieces_principales'],
+        nature_culture: json['nature_culture'],
+        surface_terrain: json['surface_terrain']);
   }
 }
 
