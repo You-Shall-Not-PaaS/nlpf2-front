@@ -7,7 +7,8 @@ import 'package:nlpf2/properties/filter.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-const geoapifyKey = "9115835f5042473ca6063cfeb06bbd46";
+//const geoapifyKey = "9115835f5042473ca6063cfeb06bbd46";
+const geoapifyKey = "b2d29fb4ad0345beae0c6438379c06b1";
 
 /*const backURL =
     'https://us-central1-sylvan-harmony-307114.cloudfunctions.net/nlpf';*/
