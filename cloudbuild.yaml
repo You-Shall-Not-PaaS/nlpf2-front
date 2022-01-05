@@ -1,9 +1,4 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/soar-frontend-app:latest', '.' ]
-  secretEnv: ['BACK_URL']
 images: [gcr.io/$PROJECT_ID/soar-frontend-app:latest]
-availableSecrets:
-  secretManager:
-  - versionName: projects/96851266705/secrets/Back_URL/versions/1
-    env: 'BACK_URL'
