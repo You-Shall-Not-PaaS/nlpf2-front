@@ -14,6 +14,7 @@ RUN flutter doctor -v
 COPY . /usr/local/bin/app
 WORKDIR /usr/local/bin/app
 RUN echo "BACK_URL=https://soar-backend-app-bnoohfl5pa-uc.a.run.app/" > .env
+
 RUN flutter pub get
 RUN flutter build web
 
