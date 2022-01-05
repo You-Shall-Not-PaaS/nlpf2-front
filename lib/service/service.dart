@@ -78,6 +78,7 @@ String createFilterUri(int page, Filters filters) {
       }
     }
   }
+  print(backURL);
   if (filters.minPrice != -1) {
     filterString += "&minPrice=" + filters.minPrice.toString();
   }
@@ -126,8 +127,11 @@ Future<Tuple2<List<Property>, List<Future<Property?>>>> getProperties(
     int page, Filters filters) async {
   //getLocations(mock);
   //return mock;
+  print("object");
   page--;
+  print(createFilterUri(page, filters));
   final response = await http.get(Uri.parse(createFilterUri(page, filters)));
+  print("object");
   if (response.statusCode == 200) {
     final jsonBody = jsonDecode(response.body);
     List<Property> properties = [];
